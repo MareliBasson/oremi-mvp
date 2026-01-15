@@ -29,9 +29,22 @@ A mobile-first Next.js application for managing your friends database with Fireb
 ### Firebase Setup
 
 1. Create a new Firebase project in the [Firebase Console](https://console.firebase.google.com/)
-2. Enable Authentication with Email/Password provider
-3. Create a Firestore Database
-4. Get your Firebase configuration from Project Settings
+2. Enable Authentication:
+   - Go to Authentication > Sign-in method
+   - Enable "Email/Password" provider
+3. Create a Firestore Database:
+   - Go to Firestore Database
+   - Click "Create database"
+   - Start in production mode or test mode (you'll add security rules next)
+4. Set up Firestore Security Rules:
+   - Go to Firestore Database > Rules
+   - Replace the default rules with the rules provided in the "Security Rules" section below
+   - Publish the rules
+5. Get your Firebase configuration:
+   - Go to Project Settings > General
+   - Scroll down to "Your apps"
+   - Click the web icon (</>)
+   - Copy the configuration values
 
 ### Installation
 
@@ -114,6 +127,8 @@ oremi-mvp/
 ```
 
 ## Security Rules
+
+**IMPORTANT**: These security rules are essential for protecting user data. Make sure to apply them in your Firebase Console before deploying your app.
 
 Add these Firestore security rules to ensure users can only access their own data:
 
