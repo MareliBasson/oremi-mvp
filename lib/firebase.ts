@@ -39,3 +39,24 @@ if (typeof window !== 'undefined') {
 }
 
 export { app, auth, db, googleProvider }
+
+// Helper to get a client Auth instance reliably (call only on client)
+export function getClientAuth(): Auth {
+	if (typeof window === 'undefined') {
+		throw new Error('getClientAuth must be called on the client')
+	}
+
+	if (!hasValidConfig) {
+		throw new Error('Firebase configuration missing')
+	}
+
+	if (!app) {
+		app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
+	}
+
+	if (!auth) {
+		auth = getAuth(app)
+	}
+
+	return auth
+}

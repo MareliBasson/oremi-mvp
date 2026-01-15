@@ -8,8 +8,16 @@ import {
 	signOut,
 	signInWithPopup,
 	onAuthStateChanged,
+	setPersistence,
+	browserLocalPersistence,
 } from 'firebase/auth'
-import { auth, googleProvider } from '@/lib/firebase'
+import { auth, googleProvider, getClientAuth } from '@/lib/firebase'
+import {
+	UserSettings,
+	getSettings,
+	saveSettings,
+	subscribeToSettings,
+} from '@/lib/settingsService'
 
 interface AuthContextType {
 	user: User | null
@@ -17,6 +25,8 @@ interface AuthContextType {
 	signup: (email: string, password: string) => Promise<void>
 	login: (email: string, password: string) => Promise<void>
 	signInWithGoogle: () => Promise<void>
+	settings: UserSettings | null
+	saveSettings: (settings: UserSettings) => Promise<void>
 	logout: () => Promise<void>
 }
 
@@ -26,6 +36,8 @@ const AuthContext = createContext<AuthContextType>({
 	signup: async () => {},
 	login: async () => {},
 	signInWithGoogle: async () => {},
+	settings: null,
+	saveSettings: async () => {},
 	logout: async () => {},
 })
 
@@ -42,37 +54,81 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
 	const [user, setUser] = useState<User | null>(null)
 	const [loading, setLoading] = useState(true)
+	const [settings, setSettings] = useState<UserSettings | null>(null)
 
 	useEffect(() => {
-		if (!auth) return
+		// initialize auth and set persistence on client
+		try {
+			const clientAuth = getClientAuth()
+			// ensure auth state is persisted across reloads
+			setPersistence(clientAuth, browserLocalPersistence).catch(() => {})
 
-		const unsubscribe = onAuthStateChanged(auth, (user) => {
-			setUser(user)
+			let unsubSettings: (() => void) | undefined
+			const unsubscribe = onAuthStateChanged(clientAuth, async (user) => {
+				setUser(user)
+				setLoading(false)
+
+				// always clear any previous settings subscription before changing state
+				if (unsubSettings) {
+					try {
+						unsubSettings()
+					} catch (_) {
+						// ignore unsubscribe errors
+					}
+					unsubSettings = undefined
+				}
+
+				if (user) {
+					try {
+						const s = await getSettings(user.uid)
+						setSettings(s)
+						// subscribe to live updates
+						unsubSettings = subscribeToSettings(user.uid, (next) =>
+							setSettings(next)
+						)
+					} catch (e) {
+						setSettings(null)
+					}
+				} else {
+					setSettings(null)
+				}
+			})
+
+			return () => {
+				unsubscribe()
+				if (unsubSettings) unsubSettings()
+			}
+		} catch (e) {
+			// running on server or auth not ready — ignore
 			setLoading(false)
-		})
-
-		return unsubscribe
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	const signup = async (email: string, password: string) => {
-		if (!auth) throw new Error('Firebase auth not initialized')
-		await createUserWithEmailAndPassword(auth, email, password)
+		const clientAuth = getClientAuth()
+		await createUserWithEmailAndPassword(clientAuth, email, password)
 	}
 
 	const login = async (email: string, password: string) => {
-		if (!auth) throw new Error('Firebase auth not initialized')
-		await signInWithEmailAndPassword(auth, email, password)
+		const clientAuth = getClientAuth()
+		await signInWithEmailAndPassword(clientAuth, email, password)
 	}
 
 	const logout = async () => {
-		if (!auth) throw new Error('Firebase auth not initialized')
-		await signOut(auth)
+		const clientAuth = getClientAuth()
+		await signOut(clientAuth)
 	}
 
 	const signInWithGoogle = async () => {
-		if (!auth || !googleProvider)
-			throw new Error('Firebase auth not initialized')
-		await signInWithPopup(auth, googleProvider)
+		const clientAuth = getClientAuth()
+		if (!googleProvider) throw new Error('Google provider not initialized')
+		await signInWithPopup(clientAuth, googleProvider)
+	}
+
+	const saveSettingsForUser = async (newSettings: UserSettings) => {
+		if (!user) throw new Error('No authenticated user')
+		await saveSettings(user.uid, newSettings)
 	}
 
 	const value = {
@@ -81,6 +137,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		signup,
 		login,
 		signInWithGoogle,
+		settings,
+		saveSettings: saveSettingsForUser,
 		logout,
 	}
 
