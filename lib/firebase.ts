@@ -14,15 +14,20 @@ const firebaseConfig = {
 // Check if we have valid configuration
 const hasValidConfig = firebaseConfig.apiKey && firebaseConfig.projectId;
 
-// Initialize Firebase only if it hasn't been initialized yet and we have valid config
+// Initialize Firebase only on the client side
+// Firebase Client SDK is designed for client-side use only
 let app: FirebaseApp | undefined;
 let auth: Auth | undefined;
 let db: Firestore | undefined;
 
-if (typeof window !== 'undefined' && hasValidConfig) {
-  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
-  auth = getAuth(app);
-  db = getFirestore(app);
+if (typeof window !== 'undefined') {
+  if (!hasValidConfig) {
+    console.warn('Firebase configuration is missing. Please set up environment variables.');
+  } else {
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+    auth = getAuth(app);
+    db = getFirestore(app);
+  }
 }
 
 export { app, auth, db };

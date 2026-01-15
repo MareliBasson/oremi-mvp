@@ -261,7 +261,13 @@ export default function FriendsPage() {
                 )}
                 {friend.birthday && (
                   <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-1">
-                    🎂 {new Date(friend.birthday).toLocaleDateString()}
+                    🎂 {(() => {
+                      try {
+                        return new Date(friend.birthday).toLocaleDateString();
+                      } catch {
+                        return friend.birthday;
+                      }
+                    })()}
                   </p>
                 )}
                 {friend.notes && (

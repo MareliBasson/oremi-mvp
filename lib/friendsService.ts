@@ -37,8 +37,8 @@ export const friendsService = {
         phone: data.phone,
         birthday: data.birthday,
         notes: data.notes,
-        createdAt: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString(),
-        updatedAt: data.updatedAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+        createdAt: data.createdAt?.toDate()?.toISOString() || new Date().toISOString(),
+        updatedAt: data.updatedAt?.toDate()?.toISOString() || new Date().toISOString(),
         userId: data.userId,
       });
     });
