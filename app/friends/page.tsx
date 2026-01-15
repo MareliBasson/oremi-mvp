@@ -12,7 +12,13 @@ export default function FriendsPage() {
 	const [showForm, setShowForm] = useState(false)
 	const [editingFriend, setEditingFriend] = useState<Friend | null>(null)
 	const [error, setError] = useState('')
-	const { user, logout, settings, saveSettings, loading: authLoading } = useAuth()
+	const {
+		user,
+		logout,
+		settings,
+		saveSettings,
+		loading: authLoading,
+	} = useAuth()
 	const router = useRouter()
 
 	const [formData, setFormData] = useState<FriendInput>({
