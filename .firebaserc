@@ -1,5 +1,5 @@
 {
-  "projects": {
-    "default": "oremi-mvp"
-  }
+	"projects": {
+		"default": "oremi-mvp"
+	}
 }
