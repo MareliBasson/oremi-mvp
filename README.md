@@ -4,62 +4,65 @@ A mobile-first Next.js application for managing your friends database with Fireb
 
 ## Features
 
-- 🔐 **Firebase Authentication** - Secure user authentication with email/password
-- 📱 **Mobile-First Design** - Responsive design optimized for mobile devices
-- 👥 **Friends Management** - Add, edit, delete, and view your friends
-- 🔒 **Private Accounts** - Each user has their own private friend list
-- 🎨 **Dark Mode Support** - Automatic dark mode based on system preferences
-- ⚡ **Real-time Updates** - Fast and efficient data synchronization with Firestore
+-   🔐 **Firebase Authentication** - Secure user authentication with email/password
+-   📱 **Mobile-First Design** - Responsive design optimized for mobile devices
+-   👥 **Friends Management** - Add, edit, delete, and view your friends
+-   🔒 **Private Accounts** - Each user has their own private friend list
+-   🎨 **Dark Mode Support** - Automatic dark mode based on system preferences
+-   ⚡ **Real-time Updates** - Fast and efficient data synchronization with Firestore
 
 ## Tech Stack
 
-- **Framework**: Next.js 16 with App Router
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Database**: Firebase Firestore
-- **Authentication**: Firebase Auth
+-   **Framework**: Next.js 16 with App Router
+-   **Language**: TypeScript
+-   **Styling**: Tailwind CSS
+-   **Database**: Firebase Firestore
+-   **Authentication**: Firebase Auth
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ installed
-- A Firebase project ([Create one here](https://console.firebase.google.com/))
+-   Node.js 18+ installed
+-   A Firebase project ([Create one here](https://console.firebase.google.com/))
 
 ### Firebase Setup
 
 1. Create a new Firebase project in the [Firebase Console](https://console.firebase.google.com/)
 2. Enable Authentication:
-   - Go to Authentication > Sign-in method
-   - Enable "Email/Password" provider
+    - Go to Authentication > Sign-in method
+    - Enable "Email/Password" provider
 3. Create a Firestore Database:
-   - Go to Firestore Database
-   - Click "Create database"
-   - Start in production mode or test mode (you'll add security rules next)
+    - Go to Firestore Database
+    - Click "Create database"
+    - Start in production mode or test mode (you'll add security rules next)
 4. Set up Firestore Security Rules:
-   - Go to Firestore Database > Rules
-   - Replace the default rules with the rules provided in the "Security Rules" section below
-   - Publish the rules
+    - Go to Firestore Database > Rules
+    - Replace the default rules with the rules provided in the "Security Rules" section below
+    - Publish the rules
 5. Get your Firebase configuration:
-   - Go to Project Settings > General
-   - Scroll down to "Your apps"
-   - Click the web icon (</>)
-   - Copy the configuration values
+    - Go to Project Settings > General
+    - Scroll down to "Your apps"
+    - Click the web icon (</>)
+    - Copy the configuration values
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/MareliBasson/oremi-mvp.git
 cd oremi-mvp
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Create a `.env.local` file in the root directory and add your Firebase configuration:
+
 ```bash
 NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
@@ -70,6 +73,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 ```
 
 4. Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -153,18 +157,18 @@ npm start
 
 ## Deployment
 
-Deploy to Vercel:
+Deploy to Netlify:
 
 1. Push your code to GitHub
-2. Import your repository on [Vercel](https://vercel.com)
-3. Add your environment variables in Vercel project settings
+2. Import your repository on Netlify
+3. Add your environment variables in Netlify project settings
 4. Deploy!
 
 ## Learn More
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Firebase Documentation](https://firebase.google.com/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+-   [Next.js Documentation](https://nextjs.org/docs)
+-   [Firebase Documentation](https://firebase.google.com/docs)
+-   [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 
 ## License
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import UserMenu from '@/components/UserMenu'
 import Button from '@/components/Button'
@@ -22,6 +22,7 @@ export default function FriendsPage() {
 		loading: authLoading,
 	} = useAuth()
 	const router = useRouter()
+	const searchParams = useSearchParams()
 
 	const [formData, setFormData] = useState<FriendInput>({
 		name: '',
@@ -97,6 +98,13 @@ export default function FriendsPage() {
 		loadFriends()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, router, authLoading])
+
+	useEffect(() => {
+		if (!searchParams) return
+		if (searchParams.get('showForm') === 'true') {
+			setShowForm(true)
+		}
+	}, [searchParams])
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
@@ -183,9 +191,7 @@ export default function FriendsPage() {
 					>
 						My Friends
 					</h1>
-					<div className='flex items-center gap-3'>
-						<UserMenu />
-					</div>
+					<div className='flex items-center gap-3' />
 				</div>
 			</header>
 
@@ -227,15 +233,7 @@ export default function FriendsPage() {
 						</select>
 					</div>
 
-					{/* Add Friend Button */}
-					{!showForm && (
-						<Button
-							onClick={() => setShowForm(true)}
-							className='mb-6 w-full sm:w-auto'
-						>
-							+ Add Friend
-						</Button>
-					)}
+					{/* Add Friend Button removed - handled by BottomNav + */}
 				</div>
 
 				{/* Friend Form */}
