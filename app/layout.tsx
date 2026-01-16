@@ -4,6 +4,9 @@ import { AuthProvider } from '@/contexts/AuthContext'
 import { FriendModalProvider } from '@/contexts/FriendModalContext'
 import FriendFormModal from '@/components/FriendFormModal'
 import BottomNav from '@/components/BottomNav'
+import { Inter } from "next/font/google";
+
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
 	title: 'Friends Database',
@@ -16,7 +19,7 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang='en'>
+		<html lang='en' className={inter.variable}>
 			<body className='antialiased'>
 				<AuthProvider>
 					<FriendModalProvider>
