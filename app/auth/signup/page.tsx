@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
+import Loading from '@/components/Loading'
+import Button from '@/components/Button'
 
 export default function SignupPage() {
 	const [email, setEmail] = useState('')
@@ -41,11 +43,18 @@ export default function SignupPage() {
 		}
 	}
 
+	if (loading) return <Loading />
+
+	if (loading) return <Loading />
+
 	return (
 		<div className='flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-4'>
-			<div className='w-full max-w-md space-y-8 bg-white dark:bg-zinc-900 p-8 rounded-lg shadow-lg'>
+			<div className='w-full max-w-md space-y-8 card dark:bg-zinc-900 p-8'>
 				<div>
-					<h2 className='text-3xl font-bold text-center text-zinc-900 dark:text-white'>
+					<h2
+						className='text-3xl font-bold text-center'
+						style={{ color: 'var(--color-primary)' }}
+					>
 						Create Account
 					</h2>
 					<p className='mt-2 text-center text-zinc-600 dark:text-zinc-400'>
@@ -118,13 +127,13 @@ export default function SignupPage() {
 					</div>
 
 					<div>
-						<button
+						<Button
 							type='submit'
 							disabled={loading}
-							className='w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed'
+							className='w-full'
 						>
 							{loading ? 'Creating account...' : 'Create account'}
-						</button>
+						</Button>
 					</div>
 				</form>
 
@@ -146,9 +155,14 @@ export default function SignupPage() {
 								setLoading(false)
 							}
 						}}
-						className='w-full flex justify-center items-center gap-2 py-3 px-4 border border-zinc-300 dark:border-zinc-700 rounded-md shadow-sm text-sm font-medium bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white hover:bg-zinc-50'
+						className='w-full'
 					>
-						Continue with Google
+						<Button
+							variant='ghost'
+							className='w-full flex justify-center items-center gap-2'
+						>
+							Continue with Google
+						</Button>
 					</button>
 				</div>
 

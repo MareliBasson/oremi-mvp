@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+import UserMenu from '@/components/UserMenu'
+import Button from '@/components/Button'
 import { friendsService } from '@/lib/friendsService'
 import { Friend, FriendInput } from '@/types/friend'
 
@@ -175,15 +177,15 @@ export default function FriendsPage() {
 			{/* Header */}
 			<header className='bg-white dark:bg-zinc-900 shadow'>
 				<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center'>
-					<h1 className='text-2xl font-bold text-zinc-900 dark:text-white'>
+					<h1
+						className='text-2xl font-bold'
+						style={{ color: 'var(--color-primary)' }}
+					>
 						My Friends
 					</h1>
-					<button
-						onClick={handleLogout}
-						className='px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white'
-					>
-						Logout
-					</button>
+					<div className='flex items-center gap-3'>
+						<UserMenu />
+					</div>
 				</div>
 			</header>
 
@@ -227,19 +229,22 @@ export default function FriendsPage() {
 
 					{/* Add Friend Button */}
 					{!showForm && (
-						<button
+						<Button
 							onClick={() => setShowForm(true)}
-							className='mb-6 w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium'
+							className='mb-6 w-full sm:w-auto'
 						>
 							+ Add Friend
-						</button>
+						</Button>
 					)}
 				</div>
 
 				{/* Friend Form */}
 				{showForm && (
-					<div className='mb-6 bg-white dark:bg-zinc-900 p-6 rounded-lg shadow-lg'>
-						<h2 className='text-xl font-semibold mb-4 text-zinc-900 dark:text-white'>
+					<div className='mb-6 card dark:bg-zinc-900 p-6'>
+						<h2
+							className='text-xl font-semibold mb-4'
+							style={{ color: 'var(--color-primary)' }}
+						>
 							{editingFriend ? 'Edit Friend' : 'Add New Friend'}
 						</h2>
 						<form onSubmit={handleSubmit} className='space-y-4'>
@@ -355,9 +360,12 @@ export default function FriendsPage() {
 						{applySort(friends).map((friend) => (
 							<div
 								key={friend.id}
-								className='bg-white dark:bg-zinc-900 p-6 rounded-lg shadow hover:shadow-lg transition-shadow'
+								className='card p-6 dark:bg-zinc-900 hover:shadow-lg transition-shadow'
 							>
-								<h3 className='text-lg font-semibold text-zinc-900 dark:text-white mb-2'>
+								<h3
+									className='text-lg font-semibold mb-2'
+									style={{ color: 'var(--color-primary)' }}
+								>
 									{friend.name}
 								</h3>
 								{friend.email && (
