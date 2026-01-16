@@ -2,11 +2,12 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { FriendModalProvider } from '@/contexts/FriendModalContext'
+import Providers from '@/components/ThemeProvider'
 import FriendFormModal from '@/components/FriendFormModal'
 import BottomNav from '@/components/BottomNav'
-import { Inter } from "next/font/google";
+import { Inter } from 'next/font/google'
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 
 export const metadata: Metadata = {
 	title: 'Friends Database',
@@ -21,13 +22,15 @@ export default function RootLayout({
 	return (
 		<html lang='en' className={inter.variable}>
 			<body className='antialiased'>
-				<AuthProvider>
-					<FriendModalProvider>
-						{children}
-						<BottomNav />
-						<FriendFormModal />
-					</FriendModalProvider>
-				</AuthProvider>
+				<Providers>
+					<AuthProvider>
+						<FriendModalProvider>
+							{children}
+							<BottomNav />
+							<FriendFormModal />
+						</FriendModalProvider>
+					</AuthProvider>
+				</Providers>
 			</body>
 		</html>
 	)

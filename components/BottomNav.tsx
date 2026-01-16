@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { Button } from './ui/button'
 import IconButton from './IconButton'
+import ThemeToggle from './ThemeToggle'
 import { useAuth } from '@/contexts/AuthContext'
 import { useFriendModal } from '@/contexts/FriendModalContext'
 import {
@@ -75,6 +76,11 @@ export default function BottomNav() {
 						}
 						label='Logout'
 					/>
+					<div className='absolute left-0 right-0 flex justify-start -mt-6 pointer-events-none'>
+						<div className='pointer-events-auto'>
+							<ThemeToggle />
+						</div>
+					</div>
 
 					<div className='absolute left-0 right-0 flex justify-end -mt-6 pointer-events-none'>
 						<div className='pointer-events-auto'>
