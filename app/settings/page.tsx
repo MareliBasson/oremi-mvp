@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 
-import Button from '@/components/Button'
-
 export default function SettingsPage() {
 	const { settings, saveSettings, loading } = useAuth()
 	const router = useRouter()
