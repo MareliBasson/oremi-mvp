@@ -1,16 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { friendsService } from '@/lib/friendsService'
-import { Friend, FriendInput } from '@/types/friend'
+import { Friend } from '@/types/friend'
+import { useFriendModal } from '@/contexts/FriendModalContext'
 
 export default function FriendsPage() {
 	const [friends, setFriends] = useState<Friend[]>([])
 	const [friendsLoading, setFriendsLoading] = useState(true)
-	const [showForm, setShowForm] = useState(false)
-	const [editingFriend, setEditingFriend] = useState<Friend | null>(null)
 	const [error, setError] = useState('')
 	const {
 		user,
@@ -20,15 +19,9 @@ export default function FriendsPage() {
 		loading: authLoading,
 	} = useAuth()
 	const router = useRouter()
-	const searchParams = useSearchParams()
+	const { openModal, savedCount } = useFriendModal()
 
-	const [formData, setFormData] = useState<FriendInput>({
-		name: '',
-		email: '',
-		phone: '',
-		birthday: '',
-		notes: '',
-	})
+	// form handled globally via FriendFormModal
 
 	const loadFriends = async () => {
 		if (!user) return
@@ -98,40 +91,14 @@ export default function FriendsPage() {
 	}, [user, router, authLoading])
 
 	useEffect(() => {
-		if (!searchParams) return
-		if (searchParams.get('showForm') === 'true') {
-			setShowForm(true)
-		}
-	}, [searchParams])
-
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault()
-		if (!user) return
-
-		try {
-			if (editingFriend) {
-				await friendsService.updateFriend(editingFriend.id, formData)
-			} else {
-				await friendsService.addFriend(user.uid, formData)
-			}
-			await loadFriends()
-			resetForm()
-		} catch (err) {
-			const error = err as Error
-			setError(error.message || 'Failed to save friend')
-		}
-	}
+		// refresh list when modal reports a save
+		if (savedCount === undefined) return
+		void loadFriends()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [savedCount])
 
 	const handleEdit = (friend: Friend) => {
-		setEditingFriend(friend)
-		setFormData({
-			name: friend.name,
-			email: friend.email || '',
-			phone: friend.phone || '',
-			birthday: friend.birthday || '',
-			notes: friend.notes || '',
-		})
-		setShowForm(true)
+		openModal(friend)
 	}
 
 	const handleDelete = async (friendId: string) => {
@@ -146,17 +113,7 @@ export default function FriendsPage() {
 		}
 	}
 
-	const resetForm = () => {
-		setFormData({
-			name: '',
-			email: '',
-			phone: '',
-			birthday: '',
-			notes: '',
-		})
-		setEditingFriend(null)
-		setShowForm(false)
-	}
+	// form reset handled by global modal
 
 	const handleLogout = async () => {
 		try {
@@ -234,115 +191,7 @@ export default function FriendsPage() {
 					{/* Add Friend Button removed - handled by BottomNav + */}
 				</div>
 
-				{/* Friend Form */}
-				{showForm && (
-					<div className='mb-6 card dark:bg-zinc-900 p-6'>
-						<h2
-							className='text-xl font-semibold mb-4'
-							style={{ color: 'var(--color-primary)' }}
-						>
-							{editingFriend ? 'Edit Friend' : 'Add New Friend'}
-						</h2>
-						<form onSubmit={handleSubmit} className='space-y-4'>
-							<div>
-								<label className='block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1'>
-									Name *
-								</label>
-								<input
-									type='text'
-									required
-									value={formData.name}
-									onChange={(e) =>
-										setFormData({
-											...formData,
-											name: e.target.value,
-										})
-									}
-									className='w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'
-								/>
-							</div>
-							<div>
-								<label className='block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1'>
-									Email
-								</label>
-								<input
-									type='email'
-									value={formData.email}
-									onChange={(e) =>
-										setFormData({
-											...formData,
-											email: e.target.value,
-										})
-									}
-									className='w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'
-								/>
-							</div>
-							<div>
-								<label className='block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1'>
-									Phone
-								</label>
-								<input
-									type='tel'
-									value={formData.phone}
-									onChange={(e) =>
-										setFormData({
-											...formData,
-											phone: e.target.value,
-										})
-									}
-									className='w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'
-								/>
-							</div>
-							<div>
-								<label className='block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1'>
-									Birthday
-								</label>
-								<input
-									type='date'
-									value={formData.birthday}
-									onChange={(e) =>
-										setFormData({
-											...formData,
-											birthday: e.target.value,
-										})
-									}
-									className='w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'
-								/>
-							</div>
-							<div>
-								<label className='block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1'>
-									Notes
-								</label>
-								<textarea
-									value={formData.notes}
-									onChange={(e) =>
-										setFormData({
-											...formData,
-											notes: e.target.value,
-										})
-									}
-									rows={3}
-									className='w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'
-								/>
-							</div>
-							<div className='flex gap-2'>
-								<button
-									type='submit'
-									className='flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
-								>
-									{editingFriend ? 'Update' : 'Add'}
-								</button>
-								<button
-									type='button'
-									onClick={resetForm}
-									className='flex-1 px-4 py-2 bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 rounded-md hover:bg-zinc-300 dark:hover:bg-zinc-600 focus:outline-none'
-								>
-									Cancel
-								</button>
-							</div>
-						</form>
-					</div>
-				)}
+
 
 				{/* Friends List */}
 				{applySort(friends).length === 0 ? (

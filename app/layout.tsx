@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
+import { FriendModalProvider } from '@/contexts/FriendModalContext'
+import FriendFormModal from '@/components/FriendFormModal'
 import BottomNav from '@/components/BottomNav'
 
 export const metadata: Metadata = {
@@ -17,8 +19,11 @@ export default function RootLayout({
 		<html lang='en'>
 			<body className='antialiased'>
 				<AuthProvider>
-					{children}
-					<BottomNav />
+					<FriendModalProvider>
+						{children}
+						<BottomNav />
+						<FriendFormModal />
+					</FriendModalProvider>
 				</AuthProvider>
 			</body>
 		</html>

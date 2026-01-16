@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import Button from './Button'
 import IconButton from './IconButton'
 import { useAuth } from '@/contexts/AuthContext'
+import { useFriendModal } from '@/contexts/FriendModalContext'
 import {
 	UserGroupIcon,
 	PlusIcon,
@@ -13,7 +14,8 @@ import { UserCircleIcon } from '@heroicons/react/24/outline'
 
 export default function BottomNav() {
 	const router = useRouter()
-	const { logout } = useAuth()
+		const { logout } = useAuth()
+		const { openModal } = useFriendModal()
 
 	const handleLogout = async () => {
 		try {
@@ -79,7 +81,7 @@ export default function BottomNav() {
 							<Button
 								onClick={(e) => {
 									e?.stopPropagation()
-									void router.push('/friends?showForm=true')
+									openModal()
 								}}
 								size='lg'
 								className='rounded-full'
