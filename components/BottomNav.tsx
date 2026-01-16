@@ -1,7 +1,6 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import UserMenu from './UserMenu'
 import Button from './Button'
 import IconButton from './IconButton'
 import { useAuth } from '@/contexts/AuthContext'

@@ -3,8 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import UserMenu from '@/components/UserMenu'
-import Button from '@/components/Button'
 import { friendsService } from '@/lib/friendsService'
 import { Friend, FriendInput } from '@/types/friend'
 
