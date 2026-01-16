@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { friendsService } from '@/lib/friendsService'
 import { Friend } from '@/types/friend'
 import { useFriendModal } from '@/contexts/FriendModalContext'
+import { Button } from '@/components/ui/button'
 
 export default function FriendsList() {
 	const { user, saveSettings, settings, loading: authLoading } = useAuth()
@@ -202,18 +203,22 @@ export default function FriendsList() {
 								</p>
 							)}
 							<div className='mt-4 flex gap-2'>
-								<button
+								<Button
+									variant='secondary'
+									size='sm'
+									className='flex-1'
 									onClick={() => handleEdit(friend)}
-									className='flex-1 px-3 py-2 text-sm bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded hover:bg-blue-200 dark:hover:bg-blue-800'
 								>
 									Edit
-								</button>
-								<button
+								</Button>
+								<Button
+									variant='destructive'
+									size='sm'
+									className='flex-1'
 									onClick={() => handleDelete(friend.id)}
-									className='flex-1 px-3 py-2 text-sm bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800'
 								>
 									Delete
-								</button>
+								</Button>
 							</div>
 						</div>
 					))}

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import Loading from '@/components/Loading'
-import Button from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import Input from '@/components/Input'
 
 export default function SignupPage() {
@@ -113,8 +113,8 @@ export default function SignupPage() {
 				</form>
 
 				<div className='mt-4'>
-					<button
-						type='button'
+					<Button
+						variant='ghost'
 						onClick={async () => {
 							setError('')
 							setLoading(true)
@@ -130,15 +130,10 @@ export default function SignupPage() {
 								setLoading(false)
 							}
 						}}
-						className='w-full'
+						className='w-full flex justify-center items-center gap-2'
 					>
-						<Button
-							variant='ghost'
-							className='w-full flex justify-center items-center gap-2'
-						>
-							Continue with Google
-						</Button>
-					</button>
+						Continue with Google
+					</Button>
 				</div>
 
 				<div className='text-center text-sm'>

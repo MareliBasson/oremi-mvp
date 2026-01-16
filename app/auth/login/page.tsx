@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import Loading from '@/components/Loading'
-import Button from '@/components/Button'
+import { Button } from '@/components/ui/button'
 import Input from '@/components/Input'
 
 export default function LoginPage() {
@@ -87,8 +87,8 @@ export default function LoginPage() {
 				</form>
 
 				<div className='mt-4'>
-					<button
-						type='button'
+					<Button
+						variant='ghost'
 						onClick={async () => {
 							setError('')
 							setLoading(true)
@@ -104,10 +104,10 @@ export default function LoginPage() {
 								setLoading(false)
 							}
 						}}
-						className='w-full flex justify-center items-center gap-2 py-3 px-4 border border-zinc-300 dark:border-zinc-700 rounded-md shadow-sm text-sm font-medium bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white hover:bg-zinc-50'
+						className='w-full flex justify-center items-center gap-2'
 					>
 						Continue with Google
-					</button>
+					</Button>
 				</div>
 
 				<div className='text-center text-sm'>

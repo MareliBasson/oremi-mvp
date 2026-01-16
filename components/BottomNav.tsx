@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import Button from './Button'
+import { Button } from './ui/button'
 import IconButton from './IconButton'
 import { useAuth } from '@/contexts/AuthContext'
 import { useFriendModal } from '@/contexts/FriendModalContext'
