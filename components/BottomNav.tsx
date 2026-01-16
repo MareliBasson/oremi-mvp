@@ -14,8 +14,8 @@ import { UserCircleIcon } from '@heroicons/react/24/outline'
 
 export default function BottomNav() {
 	const router = useRouter()
-		const { logout } = useAuth()
-		const { openModal } = useFriendModal()
+	const { logout } = useAuth()
+	const { openModal } = useFriendModal()
 
 	const handleLogout = async () => {
 		try {

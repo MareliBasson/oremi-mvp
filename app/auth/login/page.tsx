@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import Loading from '@/components/Loading'
 import Button from '@/components/Button'
+import Input from '@/components/Input'
 
 export default function LoginPage() {
 	const [email, setEmail] = useState('')
@@ -52,43 +53,27 @@ export default function LoginPage() {
 				)}
 
 				<form onSubmit={handleSubmit} className='space-y-6'>
-					<div>
-						<label
-							htmlFor='email'
-							className='block text-sm font-medium text-zinc-700 dark:text-zinc-300'
-						>
-							Email address
-						</label>
-						<input
-							id='email'
-							name='email'
-							type='email'
-							autoComplete='email'
-							required
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							className='mt-1 block w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'
-						/>
-					</div>
+					<Input
+						id='email'
+						name='email'
+						type='email'
+						autoComplete='email'
+						required
+						label='Email address'
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+					/>
 
-					<div>
-						<label
-							htmlFor='password'
-							className='block text-sm font-medium text-zinc-700 dark:text-zinc-300'
-						>
-							Password
-						</label>
-						<input
-							id='password'
-							name='password'
-							type='password'
-							autoComplete='current-password'
-							required
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							className='mt-1 block w-full px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'
-						/>
-					</div>
+					<Input
+						id='password'
+						name='password'
+						type='password'
+						autoComplete='current-password'
+						required
+						label='Password'
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+					/>
 
 					<div>
 						<Button
