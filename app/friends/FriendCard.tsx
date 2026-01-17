@@ -1,7 +1,13 @@
-'use client'
-
 import React from 'react'
 import { Friend } from '@/types/friend'
+import {
+	Card,
+	CardHeader,
+	CardTitle,
+	CardContent,
+	CardFooter,
+	CardDescription,
+} from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
 type FriendCardProps = {
@@ -10,50 +16,53 @@ type FriendCardProps = {
 	onDelete: (id: string) => void
 }
 
+function formatDate(input?: string) {
+	if (!input) return ''
+	try {
+		return new Date(input).toLocaleDateString()
+	} catch {
+		return input
+	}
+}
+
 export default function FriendCard({
 	friend,
 	onEdit,
 	onDelete,
 }: FriendCardProps) {
 	return (
-		<div className='card p-6 dark:bg-zinc-900 hover:shadow-lg transition-shadow'>
-			<h3
-				className='text-lg font-semibold mb-2'
-				style={{ color: 'var(--color-primary)' }}
-			>
-				{friend.name}
-			</h3>
-			{friend.email && (
-				<p className='text-sm text-zinc-600 dark:text-zinc-400 mb-1'>
-					📧 {friend.email}
-				</p>
-			)}
-			{friend.phone && (
-				<p className='text-sm text-zinc-600 dark:text-zinc-400 mb-1'>
-					📱 {friend.phone}
-				</p>
-			)}
-			{friend.birthday && (
-				<p className='text-sm text-zinc-600 dark:text-zinc-400 mb-1'>
-					🎂{' '}
-					{(() => {
-						try {
-							return new Date(
-								friend.birthday
-							).toLocaleDateString()
-						} catch {
-							return friend.birthday
-						}
-					})()}
-				</p>
-			)}
-			{friend.notes && (
-				<p className='text-sm text-zinc-600 dark:text-zinc-400 mt-3 italic'>
-					{friend.notes}
-				</p>
-			)}
+		<Card className='hover:shadow-lg transition-shadow'>
+			<CardHeader>
+				<CardTitle>{friend.name}</CardTitle>
+			</CardHeader>
 
-			<div className='mt-4 flex gap-2'>
+			<CardContent>
+				{friend.email && (
+					<p className='text-sm text-muted-foreground mb-1'>
+						📧 {friend.email}
+					</p>
+				)}
+
+				{friend.phone && (
+					<p className='text-sm text-muted-foreground mb-1'>
+						📱 {friend.phone}
+					</p>
+				)}
+
+				{friend.birthday && (
+					<p className='text-sm text-muted-foreground mb-1'>
+						🎂 {formatDate(friend.birthday)}
+					</p>
+				)}
+
+				{friend.notes && (
+					<CardDescription className='mt-3 italic'>
+						{friend.notes}
+					</CardDescription>
+				)}
+			</CardContent>
+
+			<CardFooter className='mt-2 gap-2'>
 				<Button
 					variant='secondary'
 					size='sm'
@@ -70,7 +79,7 @@ export default function FriendCard({
 				>
 					Delete
 				</Button>
-			</div>
-		</div>
+			</CardFooter>
+		</Card>
 	)
 }
