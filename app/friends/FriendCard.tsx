@@ -30,7 +30,7 @@ export default function FriendCard({
 	onDelete,
 }: FriendCardProps) {
 	return (
-		<Card className='hover:shadow-lg transition-shadow max-w-[600px] w-full mx-auto'>
+		<Card className='hover:shadow-lg transition-shadow w-full'>
 			<CardHeader>
 				<CardTitle>{friend.name}</CardTitle>
 			</CardHeader>
