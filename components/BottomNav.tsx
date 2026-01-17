@@ -8,10 +8,10 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useFriendModal } from '@/contexts/FriendModalContext'
 import {
 	UserGroupIcon,
+	Cog8ToothIcon,
 	PlusIcon,
-	ArrowRightOnRectangleIcon,
+	ArrowRightStartOnRectangleIcon,
 } from '@heroicons/react/24/outline'
-import { UserCircleIcon } from '@heroicons/react/24/outline'
 
 export default function BottomNav() {
 	const router = useRouter()
@@ -55,12 +55,12 @@ export default function BottomNav() {
 							void router.push('/settings')
 						}}
 						icon={
-							<UserCircleIcon
+							<Cog8ToothIcon
 								className='w-full h-full text-zinc-700 dark:text-zinc-300'
 								aria-hidden='true'
 							/>
 						}
-						label='Account'
+						label='Settings'
 					/>
 					<IconButton
 						onClick={(e) => {
@@ -69,7 +69,7 @@ export default function BottomNav() {
 							void handleLogout()
 						}}
 						icon={
-							<ArrowRightOnRectangleIcon
+							<ArrowRightStartOnRectangleIcon
 								className='w-full h-full text-zinc-700 dark:text-zinc-300'
 								aria-hidden='true'
 							/>

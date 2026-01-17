@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+import { Button } from '@/components/ui/button'
 
 export default function SettingsPage() {
 	const { settings, saveSettings, loading } = useAuth()
@@ -53,12 +54,13 @@ export default function SettingsPage() {
 						Settings
 					</h1>
 					<div className='flex items-center gap-2'>
-						<button
+						<Button
+							variant='ghost'
 							onClick={() => router.push('/friends')}
-							className='px-3 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white'
+							className='px-3 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300'
 						>
 							Back
-						</button>
+						</Button>
 					</div>
 				</div>
 			</header>
@@ -116,23 +118,24 @@ export default function SettingsPage() {
 						</div>
 
 						<div className='flex gap-2'>
-							<button
+							<Button
 								onClick={handleSave}
 								disabled={saving}
-								className='px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-60'
+								className='px-4 py-2'
 							>
 								{saving ? 'Saving...' : 'Save Settings'}
-							</button>
-							<button
+							</Button>
+							<Button
+								variant='ghost'
 								onClick={() => {
 									// reset to current settings
 									setSortBy(settings?.sortBy || 'name')
 									setSortOrder(settings?.sortOrder || 'asc')
 								}}
-								className='px-4 py-2 bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 rounded hover:bg-zinc-300 dark:hover:bg-zinc-600'
+								className='px-4 py-2'
 							>
 								Reset
-							</button>
+							</Button>
 						</div>
 					</div>
 				</div>

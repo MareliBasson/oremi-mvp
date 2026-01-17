@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useRef } from 'react'
+import { Button } from './ui/button'
 import { useFriendModal } from '@/contexts/FriendModalContext'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
@@ -169,24 +170,25 @@ export default function FriendFormModal() {
 						/>
 					</div>
 					<div className='flex gap-2 mt-2'>
-						<button
+						<Button
 							type='submit'
 							disabled={loading}
-							className='flex-1 px-4 py-2 bg-blue-600 text-white rounded-md'
+							className='flex-1'
 						>
 							{loading
 								? 'Saving...'
 								: editingFriend
 								? 'Update'
 								: 'Add'}
-						</button>
-						<button
+						</Button>
+						<Button
 							type='button'
+							variant='ghost'
+							className='flex-1'
 							onClick={closeModal}
-							className='flex-1 px-4 py-2 bg-zinc-200 rounded-md'
 						>
 							Cancel
-						</button>
+						</Button>
 					</div>
 				</form>
 			</div>

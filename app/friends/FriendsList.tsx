@@ -150,8 +150,6 @@ export default function FriendsList() {
 						<option value='desc'>Descending</option>
 					</select>
 				</div>
-
-				{/* Add Friend Button is handled in BottomNav */}
 			</div>
 
 			{applySort(friends).length === 0 ? (
