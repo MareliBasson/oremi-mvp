@@ -68,7 +68,7 @@ export default function SortControls({ friends, onSorted }: SortControlsProps) {
 	}
 
 	return (
-		<div className='flex items-center gap-2'>
+		<div className='max-w-[600px] w-full mx-auto flex items-center gap-2'>
 			<Label className='text-sm text-zinc-700 dark:text-zinc-300'>
 				Sort:
 			</Label>

@@ -36,8 +36,13 @@ export default function BottomNav() {
 			className='fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 z-40'
 			style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
 		>
-			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+			<div className='max-w-[600px] mx-auto'>
 				<nav className='flex items-center justify-center h-16 relative'>
+					<div className='absolute left-0 right-0 flex justify-start -mt-6 pointer-events-none'>
+						<div className='pointer-events-auto'>
+							<ThemeToggle />
+						</div>
+					</div>
 					<IconButton
 						onClick={(e) => {
 							e.preventDefault()
@@ -80,13 +85,8 @@ export default function BottomNav() {
 						}
 						label='Logout'
 					/>
-					<div className='absolute left-0 right-0 flex justify-start -mt-6 pointer-events-none'>
-						<div className='pointer-events-auto'>
-							<ThemeToggle />
-						</div>
-					</div>
 
-					<div className='absolute left-0 right-0 flex justify-end -mt-6 pointer-events-none'>
+					<div className='absolute left-0 right-0 flex items-center justify-end -mt-6 pointer-events-none'>
 						<div className='pointer-events-auto'>
 							<Button
 								onClick={(e) => {
