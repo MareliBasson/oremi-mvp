@@ -2,11 +2,20 @@
 
 import React, { useEffect, useState, useRef } from 'react'
 import { Button } from './ui/button'
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogDescription,
+	DialogFooter,
+	DialogClose,
+} from './ui/dialog'
 import { useFriendModal } from '@/contexts/FriendModalContext'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { friendsService } from '@/lib/friendsService'
-import { Friend, FriendInput } from '@/types/friend'
+import { FriendInput } from '@/types/friend'
 
 export default function FriendFormModal() {
 	const { isOpen, closeModal, editingFriend, notifySaved } = useFriendModal()
@@ -52,8 +61,6 @@ export default function FriendFormModal() {
 		}
 	}, [isOpen])
 
-	if (!isOpen) return null
-
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		if (!user) return setError('Not authenticated')
@@ -66,6 +73,7 @@ export default function FriendFormModal() {
 			}
 			notifySaved()
 			void router.push('/friends')
+			closeModal()
 		} catch (err) {
 			const error = err as Error
 			setError(error.message || 'Failed to save friend')
@@ -75,19 +83,19 @@ export default function FriendFormModal() {
 	}
 
 	return (
-		<div className='fixed inset-0 z-50 flex items-center justify-center'>
-			<div
-				className='absolute inset-0 bg-black/40'
-				onClick={closeModal}
-			/>
-			<div className='relative w-full max-w-md mx-4 bg-white dark:bg-zinc-900 rounded-lg p-6'>
-				<h2
-					className='text-xl font-semibold mb-4'
-					style={{ color: 'var(--color-primary)' }}
-				>
-					{editingFriend ? 'Edit Friend' : 'Add New Friend'}
-				</h2>
-				{error && <div className='mb-3 text-red-600'>{error}</div>}
+		<Dialog open={isOpen} onOpenChange={(open) => !open && closeModal()}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>
+						{editingFriend ? 'Edit Friend' : 'Add New Friend'}
+					</DialogTitle>
+					<DialogDescription>
+						{error && (
+							<div className='mb-3 text-red-600'>{error}</div>
+						)}
+					</DialogDescription>
+				</DialogHeader>
+
 				<form onSubmit={handleSubmit} className='space-y-3'>
 					<div>
 						<label className='block text-sm font-medium mb-1'>
@@ -106,6 +114,7 @@ export default function FriendFormModal() {
 							className='w-full px-3 py-2 border rounded bg-white dark:bg-zinc-800'
 						/>
 					</div>
+
 					<div>
 						<label className='block text-sm font-medium mb-1'>
 							Email
@@ -122,6 +131,7 @@ export default function FriendFormModal() {
 							className='w-full px-3 py-2 border rounded bg-white dark:bg-zinc-800'
 						/>
 					</div>
+
 					<div>
 						<label className='block text-sm font-medium mb-1'>
 							Phone
@@ -137,6 +147,7 @@ export default function FriendFormModal() {
 							className='w-full px-3 py-2 border rounded bg-white dark:bg-zinc-800'
 						/>
 					</div>
+
 					<div>
 						<label className='block text-sm font-medium mb-1'>
 							Birthday
@@ -153,6 +164,7 @@ export default function FriendFormModal() {
 							className='w-full px-3 py-2 border rounded bg-white dark:bg-zinc-800'
 						/>
 					</div>
+
 					<div>
 						<label className='block text-sm font-medium mb-1'>
 							Notes
@@ -169,7 +181,8 @@ export default function FriendFormModal() {
 							className='w-full px-3 py-2 border rounded bg-white dark:bg-zinc-800'
 						/>
 					</div>
-					<div className='flex gap-2 mt-2'>
+
+					<DialogFooter>
 						<Button
 							type='submit'
 							disabled={loading}
@@ -181,17 +194,19 @@ export default function FriendFormModal() {
 								? 'Update'
 								: 'Add'}
 						</Button>
-						<Button
-							type='button'
-							variant='ghost'
-							className='flex-1'
-							onClick={closeModal}
-						>
-							Cancel
-						</Button>
-					</div>
+						<DialogClose asChild>
+							<Button
+								type='button'
+								variant='ghost'
+								className='flex-1'
+								onClick={closeModal}
+							>
+								Cancel
+							</Button>
+						</DialogClose>
+					</DialogFooter>
 				</form>
-			</div>
-		</div>
+			</DialogContent>
+		</Dialog>
 	)
 }
