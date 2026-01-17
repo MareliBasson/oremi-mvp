@@ -51,26 +51,6 @@ export default function SettingsPage() {
 
 	return (
 		<div className='min-h-screen bg-zinc-50 dark:bg-zinc-950'>
-			<header className='bg-white dark:bg-zinc-900 shadow'>
-				<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center'>
-					<h1
-						className='text-2xl font-bold'
-						style={{ color: 'var(--color-primary)' }}
-					>
-						Settings
-					</h1>
-					<div className='flex items-center gap-2'>
-						<Button
-							variant='ghost'
-							onClick={() => router.push('/friends')}
-							className='px-3 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300'
-						>
-							Back
-						</Button>
-					</div>
-				</div>
-			</header>
-
 			<main className='max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
 				{msg && (
 					<div className='mb-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 px-4 py-3 rounded'>

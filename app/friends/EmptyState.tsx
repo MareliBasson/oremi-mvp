@@ -22,7 +22,7 @@ export default function EmptyState({
 }: EmptyStateProps) {
 	const { openModal } = useFriendModal()
 	return (
-		<Empty className='py-12'>
+		<Empty className='py-12 min-h-[60vh]'>
 			<EmptyHeader>
 				<EmptyMedia variant='icon'>
 					<UserPlus className='size-6' />

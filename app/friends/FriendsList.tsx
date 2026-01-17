@@ -84,23 +84,27 @@ export default function FriendsList() {
 				</div>
 			)}
 
-			<div className='mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
-				<SortControls friends={friends} onSorted={setDisplayFriends} />
-			</div>
-
 			{displayFriends.length === 0 ? (
 				<EmptyState />
 			) : (
-				<div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-					{displayFriends.map((friend) => (
-						<FriendCard
-							key={friend.id}
-							friend={friend}
-							onEdit={handleEdit}
-							onDelete={handleDelete}
+				<>
+					<div className='mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
+						<SortControls
+							friends={friends}
+							onSorted={setDisplayFriends}
 						/>
-					))}
-				</div>
+					</div>
+					<div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+						{displayFriends.map((friend) => (
+							<FriendCard
+								key={friend.id}
+								friend={friend}
+								onEdit={handleEdit}
+								onDelete={handleDelete}
+							/>
+						))}
+					</div>
+				</>
 			)}
 		</>
 	)
