@@ -6,6 +6,7 @@ import { Friend } from '@/types/friend'
 import { useFriendModal } from '@/contexts/FriendModalContext'
 import FriendCard from './FriendCard'
 import SortControls from './SortControls'
+import EmptyState from './EmptyState'
 
 export default function FriendsList() {
 	const { user, saveSettings, settings, loading: authLoading } = useAuth()
@@ -88,11 +89,7 @@ export default function FriendsList() {
 			</div>
 
 			{displayFriends.length === 0 ? (
-				<div className='text-center py-12'>
-					<p className='text-zinc-600 dark:text-zinc-400 text-lg'>
-						No friends yet. Add your first friend!
-					</p>
-				</div>
+				<EmptyState />
 			) : (
 				<div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
 					{displayFriends.map((friend) => (
