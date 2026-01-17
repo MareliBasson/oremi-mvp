@@ -1,7 +1,13 @@
 import React from 'react'
 import Link from 'next/link'
 import { Friend } from '@/types/friend'
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
+import {
+	Card,
+	CardHeader,
+	CardTitle,
+	CardContent,
+	CardDescription,
+} from '@/components/ui/card'
 
 type FriendCardProps = {
 	friend: Friend
@@ -54,8 +60,6 @@ export default function FriendCard({
 					</CardDescription>
 				)}
 			</CardContent>
-
-		
 		</Card>
 	)
 }

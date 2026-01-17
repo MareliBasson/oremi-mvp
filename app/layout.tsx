@@ -25,7 +25,14 @@ export default function RootLayout({
 				<Providers>
 					<AuthProvider>
 						<FriendModalProvider>
-							{children}
+							<div
+								style={{
+									paddingBottom:
+										'calc(4rem + env(safe-area-inset-bottom))',
+								}}
+							>
+								{children}
+							</div>
 							<BottomNav />
 							<FriendFormModal />
 						</FriendModalProvider>
