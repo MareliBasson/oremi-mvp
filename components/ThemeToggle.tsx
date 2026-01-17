@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
+import { Switch } from './ui/switch'
 import { Button } from './ui/button'
+import { Sun, Moon } from 'lucide-react'
 
 export default function ThemeToggle() {
 	const { theme, setTheme, resolvedTheme } = useTheme()
@@ -18,13 +20,35 @@ export default function ThemeToggle() {
 	if (!mounted) return null
 
 	return (
-		<Button
-			// variant='ghost'
-			onClick={() => setTheme(current === 'dark' ? 'light' : 'dark')}
-			className='px-2 py-1 rounded border'
-			aria-label='Toggle theme'
-		>
-			{current === 'dark' ? 'Light' : 'Dark'}
-		</Button>
+		<div className='flex items-center gap-2'>
+			<Button
+				variant='ghost'
+				size='icon-sm'
+				aria-label='Switch to light theme'
+				onClick={() => setTheme('light')}
+				title='Light'
+			>
+				<Sun className='size-4 text-zinc-700 dark:text-zinc-400' />
+			</Button>
+
+			<Switch
+				size='sm'
+				checked={current === 'dark'}
+				onCheckedChange={(checked) =>
+					setTheme(checked ? 'dark' : 'light')
+				}
+				aria-label='Toggle theme'
+			/>
+
+			<Button
+				variant='ghost'
+				size='icon-sm'
+				aria-label='Switch to dark theme'
+				onClick={() => setTheme('dark')}
+				title='Dark'
+			>
+				<Moon className='size-4 text-zinc-700 dark:text-zinc-400' />
+			</Button>
+		</div>
 	)
 }
