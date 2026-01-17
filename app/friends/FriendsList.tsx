@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { friendsService } from '@/lib/friendsService'
 import { Friend } from '@/types/friend'
 import { useFriendModal } from '@/contexts/FriendModalContext'
-import FriendCard from './FriendCard'
+import FriendCard, { ClickableFriendCard } from './FriendCard'
 import SortControls from './SortControls'
 import EmptyState from './EmptyState'
 
@@ -96,7 +96,7 @@ export default function FriendsList() {
 					</div>
 					<div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
 						{displayFriends.map((friend) => (
-							<FriendCard
+							<ClickableFriendCard
 								key={friend.id}
 								friend={friend}
 								onEdit={handleEdit}

@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import { Friend } from '@/types/friend'
 import {
 	Card,
@@ -67,7 +68,10 @@ export default function FriendCard({
 					variant='secondary'
 					size='sm'
 					className='flex-1'
-					onClick={() => onEdit(friend)}
+					onClick={(e) => {
+						e.stopPropagation()
+						onEdit(friend)
+					}}
 				>
 					Edit
 				</Button>
@@ -75,11 +79,23 @@ export default function FriendCard({
 					variant='destructive'
 					size='sm'
 					className='flex-1'
-					onClick={() => onDelete(friend.id)}
+					onClick={(e) => {
+						e.stopPropagation()
+						onDelete(friend.id)
+					}}
 				>
 					Delete
 				</Button>
 			</CardFooter>
 		</Card>
+	)
+}
+
+export function ClickableFriendCard(props: FriendCardProps) {
+	const { friend, onEdit, onDelete } = props
+	return (
+		<Link href={`/friends/${friend.id}`} className='block'>
+			<FriendCard friend={friend} onEdit={onEdit} onDelete={onDelete} />
+		</Link>
 	)
 }
