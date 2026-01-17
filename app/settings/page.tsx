@@ -6,8 +6,14 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 
 export default function SettingsPage() {
-	const { settings, saveSettings, loading } = useAuth()
+	const { settings, saveSettings, loading, user } = useAuth()
 	const router = useRouter()
+
+	useEffect(() => {
+		if (!loading && !user) {
+			void router.push('/auth/login')
+		}
+	}, [loading, user, router])
 
 	const [sortBy, setSortBy] = useState<'name' | 'createdAt'>('name')
 	const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')

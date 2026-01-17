@@ -15,8 +15,12 @@ import {
 
 export default function BottomNav() {
 	const router = useRouter()
-	const { logout } = useAuth()
+	const { logout, user, loading } = useAuth()
+
 	const { openModal } = useFriendModal()
+
+	// don't render bottom navigation while auth is loading or when not logged in
+	if (loading || !user) return null
 
 	const handleLogout = async () => {
 		try {
