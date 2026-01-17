@@ -37,71 +37,68 @@ export default function BottomNav() {
 			style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
 		>
 			<div className='max-w-[600px] mx-auto'>
-				<nav className='flex items-center justify-center h-16 relative'>
-					<div className='absolute left-0 right-0 flex justify-start -mt-6 pointer-events-none'>
-						<div className='pointer-events-auto'>
-							<ThemeToggle />
-						</div>
+				<nav className='relative flex items-center justify-between h-16'>
+					{/* left: theme toggle */}
+					<div className='flex items-center'>
+						<ThemeToggle />
 					</div>
-					<IconButton
-						onClick={(e) => {
-							e.preventDefault()
-							e.stopPropagation()
-							void router.push('/friends')
-						}}
-						icon={
-							<UserGroupIcon
-								className='w-full h-full text-zinc-700 dark:text-zinc-300'
-								aria-hidden='true'
-							/>
-						}
-						label='Friends'
-					/>
-					<IconButton
-						onClick={(e) => {
-							e.preventDefault()
-							e.stopPropagation()
-							void router.push('/settings')
-						}}
-						icon={
-							<Cog8ToothIcon
-								className='w-full h-full text-zinc-700 dark:text-zinc-300'
-								aria-hidden='true'
-							/>
-						}
-						label='Settings'
-					/>
-					<IconButton
-						onClick={(e) => {
-							e.preventDefault()
-							e.stopPropagation()
-							void handleLogout()
-						}}
-						icon={
-							<ArrowRightStartOnRectangleIcon
-								className='w-full h-full text-zinc-700 dark:text-zinc-300'
-								aria-hidden='true'
-							/>
-						}
-						label='Logout'
-					/>
-
-					<div className='absolute left-0 right-0 flex items-center justify-end -mt-6 pointer-events-none'>
-						<div className='pointer-events-auto'>
-							<Button
-								onClick={(e) => {
-									e?.stopPropagation()
-									openModal()
-								}}
-								size='lg'
-								className='rounded-full'
-							>
-								<PlusIcon
-									className='w-6 h-6'
+					{/* center: grouped icon buttons (absolutely centered) */}
+					<div className='absolute left-1/2 transform -translate-x-1/2 flex items-center gap-4'>
+						<IconButton
+							onClick={(e) => {
+								e.preventDefault()
+								e.stopPropagation()
+								void router.push('/friends')
+							}}
+							icon={
+								<UserGroupIcon
+									className='w-full h-full text-zinc-700 dark:text-zinc-300'
 									aria-hidden='true'
 								/>
-							</Button>
-						</div>
+							}
+							label='Friends'
+						/>
+						<IconButton
+							onClick={(e) => {
+								e.preventDefault()
+								e.stopPropagation()
+								void router.push('/settings')
+							}}
+							icon={
+								<Cog8ToothIcon
+									className='w-full h-full text-zinc-700 dark:text-zinc-300'
+									aria-hidden='true'
+								/>
+							}
+							label='Settings'
+						/>
+						<IconButton
+							onClick={(e) => {
+								e.preventDefault()
+								e.stopPropagation()
+								void handleLogout()
+							}}
+							icon={
+								<ArrowRightStartOnRectangleIcon
+									className='w-full h-full text-zinc-700 dark:text-zinc-300'
+									aria-hidden='true'
+								/>
+							}
+							label='Logout'
+						/>
+					</div>
+					{/* right: add button */}
+					<div className='flex items-center'>
+						<Button
+							onClick={(e) => {
+								e?.stopPropagation()
+								openModal()
+							}}
+							size='lg'
+							className='rounded-full'
+						>
+							<PlusIcon className='w-6 h-6' aria-hidden='true' />
+						</Button>
 					</div>
 				</nav>
 			</div>
