@@ -5,6 +5,14 @@ import { friendsService } from '@/lib/friendsService'
 import { Friend } from '@/types/friend'
 import { useFriendModal } from '@/contexts/FriendModalContext'
 import FriendCard from './FriendCard'
+import {
+	Select,
+	SelectTrigger,
+	SelectContent,
+	SelectItem,
+	SelectValue,
+} from '@/components/ui/select'
+import { Label } from '@/components/ui/label'
 
 export default function FriendsList() {
 	const { user, saveSettings, settings, loading: authLoading } = useAuth()
@@ -120,33 +128,45 @@ export default function FriendsList() {
 
 			<div className='mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
 				<div className='flex items-center gap-2'>
-					<label className='text-sm text-zinc-700 dark:text-zinc-300'>
+					<Label className='text-sm text-zinc-700 dark:text-zinc-300'>
 						Sort:
-					</label>
-					<select
+					</Label>
+
+					<Select
 						value={sortBy}
-						onChange={(e) => {
-							const v = e.target.value as 'name' | 'createdAt'
-							setSortBy(v)
-							void handleSaveSettings(v, sortOrder)
+						onValueChange={(v) => {
+							const nv = v as 'name' | 'createdAt'
+							setSortBy(nv)
+							void handleSaveSettings(nv, sortOrder)
 						}}
-						className='px-2 py-1 border rounded bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'
 					>
-						<option value='name'>Name</option>
-						<option value='createdAt'>Date added</option>
-					</select>
-					<select
+						<SelectTrigger size='sm' className='min-w-[120px]'>
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value='name'>Name</SelectItem>
+							<SelectItem value='createdAt'>
+								Date added
+							</SelectItem>
+						</SelectContent>
+					</Select>
+
+					<Select
 						value={sortOrder}
-						onChange={(e) => {
-							const v = e.target.value as 'asc' | 'desc'
-							setSortOrder(v)
-							void handleSaveSettings(sortBy, v)
+						onValueChange={(v) => {
+							const nv = v as 'asc' | 'desc'
+							setSortOrder(nv)
+							void handleSaveSettings(sortBy, nv)
 						}}
-						className='px-2 py-1 border rounded bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'
 					>
-						<option value='asc'>Ascending</option>
-						<option value='desc'>Descending</option>
-					</select>
+						<SelectTrigger size='sm' className='min-w-[120px]'>
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value='asc'>Ascending</SelectItem>
+							<SelectItem value='desc'>Descending</SelectItem>
+						</SelectContent>
+					</Select>
 				</div>
 			</div>
 
