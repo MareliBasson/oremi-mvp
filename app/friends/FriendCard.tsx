@@ -1,20 +1,12 @@
 import React from 'react'
 import Link from 'next/link'
 import { Friend } from '@/types/friend'
-import {
-	Card,
-	CardHeader,
-	CardTitle,
-	CardContent,
-	CardFooter,
-	CardDescription,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
 
 type FriendCardProps = {
 	friend: Friend
-	onEdit: (friend: Friend) => void
-	onDelete: (id: string) => void
+	onEdit?: (friend: Friend) => void
+	onDelete?: (id: string) => void
 }
 
 function formatDate(input?: string) {
@@ -63,30 +55,7 @@ export default function FriendCard({
 				)}
 			</CardContent>
 
-			<CardFooter className='mt-2 gap-2'>
-				<Button
-					variant='secondary'
-					size='sm'
-					className='flex-1'
-					onClick={(e) => {
-						e.stopPropagation()
-						onEdit(friend)
-					}}
-				>
-					Edit
-				</Button>
-				<Button
-					variant='destructive'
-					size='sm'
-					className='flex-1'
-					onClick={(e) => {
-						e.stopPropagation()
-						onDelete(friend.id)
-					}}
-				>
-					Delete
-				</Button>
-			</CardFooter>
+		
 		</Card>
 	)
 }
