@@ -5,7 +5,7 @@ import { friendsService } from '@/lib/friendsService'
 import { Friend } from '@/types/friend'
 import { useFriendModal } from '@/contexts/FriendModalContext'
 import FriendCard, { ClickableFriendCard } from './FriendCard'
-import SortControls from './SortControls'
+import FriendsFilteringControls from './FriendsFilteringControls'
 import EmptyState from './EmptyState'
 
 export default function FriendsList() {
@@ -88,13 +88,13 @@ export default function FriendsList() {
 				<EmptyState />
 			) : (
 				<>
-					<div className='mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
-						<SortControls
+					<div className='mb-6 max-w-[600px] w-full mx-auto flex justify-end items-start'>
+						<FriendsFilteringControls
 							friends={friends}
 							onSorted={setDisplayFriends}
 						/>
 					</div>
-					<div className='grid gap-4 grid-cols-1'>
+					<div className='max-w-[600px] grid gap-4 grid-cols-1  mx-auto'>
 						{displayFriends.map((friend) => (
 							<ClickableFriendCard
 								key={friend.id}
