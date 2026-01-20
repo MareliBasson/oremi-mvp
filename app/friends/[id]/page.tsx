@@ -9,6 +9,7 @@ import { useFriendModal } from '@/contexts/FriendModalContext'
 import { timeAgo, avatarGradient, initials } from '@/lib/utils'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
 	Card,
 	CardHeader,
@@ -110,7 +111,7 @@ export default function FriendPage() {
 
 	return (
 		<div className='min-h-screen max-w-2xl mx-auto py-8'>
-			<Card>
+			<Card className='pb-0'>
 				<CardHeader>
 					<div className='flex flex-col items-center gap-2 py-6'>
 						<Avatar className='w-24 h-24'>
@@ -143,68 +144,107 @@ export default function FriendPage() {
 						)}
 					</div>
 				</CardHeader>
-				<Separator />
 				<CardContent>
-					<div className='space-y-2'>
-						<p className='text-sm'>
-							<span className='font-semibold'>Email:</span>{' '}
-							<span className='text-muted-foreground'>
-								{friend.email || '—'}
-							</span>
-						</p>
-						<p className='text-sm'>
-							<span className='font-semibold'>Phone:</span>{' '}
-							<span className='text-muted-foreground'>
-								{friend.phone || '—'}
-							</span>
-						</p>
-						<p className='text-sm'>
-							<span className='font-semibold'>Birthday:</span>{' '}
-							<span className='text-muted-foreground'>
-								{friend.birthday
-									? new Date(
-											friend.birthday
-									  ).toLocaleDateString()
-									: '—'}
-							</span>
-						</p>
-						<p className='text-sm'>
-							<span className='font-semibold'>Last seen:</span>{' '}
-							<span className='text-muted-foreground'>
-								{friend.lastSeen
-									? timeAgo(friend.lastSeen)
-									: '—'}
-							</span>
-						</p>
-						<div>
-							<p className='font-semibold mb-1'>Notes</p>
-							<div className='text-sm text-muted-foreground italic'>
-								{friend.notes || '—'}
+					<Tabs defaultValue='info'>
+						<TabsList variant='line' className='w-full mb-6'>
+							<TabsTrigger value='info'>Info</TabsTrigger>
+							<TabsTrigger value='notes'>Notes</TabsTrigger>
+							<TabsTrigger value='activity'>Activity</TabsTrigger>
+						</TabsList>
+
+						<TabsContent
+							value='info'
+							className='min-h-[200px] px-2 mb-5'
+						>
+							<div className='space-y-2'>
+								<p className='text-sm'>
+									<span className='font-semibold'>
+										Email:
+									</span>{' '}
+									<span className='text-muted-foreground'>
+										{friend.email || '—'}
+									</span>
+								</p>
+								<p className='text-sm'>
+									<span className='font-semibold'>
+										Phone:
+									</span>{' '}
+									<span className='text-muted-foreground'>
+										{friend.phone || '—'}
+									</span>
+								</p>
+								<p className='text-sm'>
+									<span className='font-semibold'>
+										Birthday:
+									</span>{' '}
+									<span className='text-muted-foreground'>
+										{friend.birthday
+											? new Date(
+													friend.birthday
+											  ).toLocaleDateString()
+											: '—'}
+									</span>
+								</p>
+								<p className='text-sm'>
+									<span className='font-semibold'>
+										Last seen:
+									</span>{' '}
+									<span className='text-muted-foreground'>
+										{friend.lastSeen
+											? timeAgo(friend.lastSeen)
+											: '—'}
+									</span>
+								</p>
+								<p className='text-sm'>
+									<span className='font-semibold'>
+										Created:
+									</span>{' '}
+									<span className='text-muted-foreground'>
+										{friend.createdAt
+											? new Date(
+													friend.createdAt
+											  ).toLocaleString()
+											: '—'}
+									</span>
+								</p>
+								<p className='text-sm'>
+									<span className='font-semibold'>
+										Updated:
+									</span>{' '}
+									<span className='text-muted-foreground'>
+										{friend.updatedAt
+											? new Date(
+													friend.updatedAt
+											  ).toLocaleString()
+											: '—'}
+									</span>
+								</p>
 							</div>
-						</div>
-						<p className='text-sm'>
-							<span className='font-semibold'>Created:</span>{' '}
-							<span className='text-muted-foreground'>
-								{friend.createdAt
-									? new Date(
-											friend.createdAt
-									  ).toLocaleString()
-									: '—'}
-							</span>
-						</p>
-						<p className='text-sm'>
-							<span className='font-semibold'>Updated:</span>{' '}
-							<span className='text-muted-foreground'>
-								{friend.updatedAt
-									? new Date(
-											friend.updatedAt
-									  ).toLocaleString()
-									: '—'}
-							</span>
-						</p>
-					</div>
+						</TabsContent>
+
+						<TabsContent
+							value='notes'
+							className='min-h-[200px] px-2 mb-5'
+						>
+							<div>
+								<p className='font-semibold mb-1'>Notes</p>
+								<div className='text-sm text-muted-foreground italic'>
+									{friend.notes || '—'}
+								</div>
+							</div>
+						</TabsContent>
+
+						<TabsContent
+							value='activity'
+							className='min-h-[200px] px-2 mb-5'
+						>
+							<div className='text-sm text-muted-foreground'>
+								No activity yet.
+							</div>
+						</TabsContent>
+					</Tabs>
 				</CardContent>
-				<CardFooter className='gap-2'>
+				<CardFooter className='gap-2 bg-accent py-4'>
 					<Button variant='secondary' onClick={handleEdit}>
 						Edit
 					</Button>
