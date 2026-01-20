@@ -113,7 +113,7 @@ export default function FriendPage() {
 			<Card>
 				<CardHeader>
 					<div className='flex flex-col items-center gap-2 py-6'>
-						<Avatar className='w-32 h-32'>
+						<Avatar className='w-24 h-24'>
 							<AvatarFallback
 								style={{
 									background: avatarGradient(
@@ -122,12 +122,11 @@ export default function FriendPage() {
 										}`
 									),
 								}}
-								className='w-32 h-32 text-2xl'
+								className='w-24 h-24 text-3xl font-semibold text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]'
 							>
 								{initials(friend.firstName, friend.lastName)}
 							</AvatarFallback>
 						</Avatar>
-
 						<CardTitle className='mt-2 text-center text-2xl'>
 							{`${friend.firstName}${
 								friend.lastName ? ' ' + friend.lastName : ''
@@ -135,7 +134,7 @@ export default function FriendPage() {
 						</CardTitle>
 						{friend.lastSeen ? (
 							<CardDescription className='text-sm text-muted-foreground'>
-								👀 Last seen {timeAgo(friend.lastSeen)}
+								Last seen {timeAgo(friend.lastSeen)}
 							</CardDescription>
 						) : (
 							<CardDescription className='text-sm text-muted-foreground'>
@@ -173,7 +172,7 @@ export default function FriendPage() {
 							<span className='font-semibold'>Last seen:</span>{' '}
 							<span className='text-muted-foreground'>
 								{friend.lastSeen
-									? `👀 ${timeAgo(friend.lastSeen)}`
+									? timeAgo(friend.lastSeen)
 									: '—'}
 							</span>
 						</p>

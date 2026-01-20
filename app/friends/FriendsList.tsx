@@ -76,7 +76,7 @@ export default function FriendsList() {
 				<EmptyState />
 			) : (
 				<>
-					<div className='mb-6 max-w-[600px] w-full mx-auto flex justify-between items-start gap-4'>
+					<div className='mb-10 max-w-[680px] w-full mx-auto flex justify-between items-start gap-4'>
 						<div className='flex-1'>
 							<FriendsSearch
 								onSearch={(searchQuery) => {
@@ -119,7 +119,7 @@ export default function FriendsList() {
 							}}
 						/>
 					) : (
-						<div className='max-w-[600px] grid gap-4 grid-cols-1  mx-auto'>
+						<div className='max-w-[680px] grid gap-6 grid-cols-1  mx-auto'>
 							{displayFriends.map((friend) => (
 								<ClickableFriendCard
 									key={friend.id}

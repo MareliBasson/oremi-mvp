@@ -31,48 +31,24 @@ export default function FriendCard({ friend }: FriendCardProps) {
 		<Card className='hover:shadow-lg transition-shadow w-full'>
 			<CardHeader>
 				<div className='flex items-center gap-3'>
-					<Avatar className='w-20 h-20'>
+					<Avatar className='w-14 h-14 mr-1'>
 						<AvatarFallback
 							style={{ background: avatarGradient(fullName) }}
-							className='w-20 h-20 text-lg'
+							className='w-14 h-14 text-base font-semibold text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]'
 						>
 							{initials(friend.firstName, friend.lastName)}
 						</AvatarFallback>
 					</Avatar>
-					<CardTitle className='!mb-0'>{fullName}</CardTitle>
+					<div className='flex flex-col'>
+						<CardTitle className='mb-2'>{fullName}</CardTitle>
+						{friend.lastSeen ? (
+							<CardDescription className='text-sm text-muted-foreground'>
+								Last seen {timeAgo(friend.lastSeen)}
+							</CardDescription>
+						) : null}
+					</div>
 				</div>
 			</CardHeader>
-
-			<CardContent>
-				{friend.lastSeen && (
-					<p className='text-sm text-muted-foreground mb-1'>
-						👀 Last seen {timeAgo(friend.lastSeen)}
-					</p>
-				)}
-				{friend.email && (
-					<p className='text-sm text-muted-foreground mb-1'>
-						📧 {friend.email}
-					</p>
-				)}
-
-				{friend.phone && (
-					<p className='text-sm text-muted-foreground mb-1'>
-						📱 {friend.phone}
-					</p>
-				)}
-
-				{friend.birthday && (
-					<p className='text-sm text-muted-foreground mb-1'>
-						🎂 {formatDate(friend.birthday)}
-					</p>
-				)}
-
-				{friend.notes && (
-					<CardDescription className='mt-3 italic'>
-						{friend.notes}
-					</CardDescription>
-				)}
-			</CardContent>
 		</Card>
 	)
 }
