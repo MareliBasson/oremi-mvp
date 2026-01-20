@@ -20,6 +20,7 @@ type EmptySearchProps = {
 
 export default function EmptySearch({ query = '', onClear }: EmptySearchProps) {
 	const { openModal } = useFriendModal()
+	const display = query && query.trim() ? query : 'your search'
 
 	return (
 		<Empty className='py-12 min-h-[40vh]'>
@@ -30,23 +31,15 @@ export default function EmptySearch({ query = '', onClear }: EmptySearchProps) {
 				<EmptyContent>
 					<EmptyTitle>No results</EmptyTitle>
 					<EmptyDescription>
-						No friends match <strong>"{query}"</strong>.
+						No friends match <strong>"{display}"</strong>
 					</EmptyDescription>
-					<div className='flex gap-2 mt-4'>
-						{onClear ? (
+					{onClear ? (
+						<div className='flex gap-2 mt-4'>
 							<Button variant='ghost' size='sm' onClick={onClear}>
 								Clear search
 							</Button>
-						) : null}
-
-						<Button
-							variant='default'
-							size='sm'
-							onClick={() => openModal()}
-						>
-							Add friend
-						</Button>
-					</div>
+						</div>
+					) : null}
 				</EmptyContent>
 			</EmptyHeader>
 		</Empty>

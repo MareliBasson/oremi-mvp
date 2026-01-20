@@ -17,6 +17,7 @@ export default function FriendsList() {
 
 	const [friends, setFriends] = useState<Friend[]>([])
 	const [displayFriends, setDisplayFriends] = useState<Friend[]>([])
+	const [searchQuery, setSearchQuery] = useState('')
 	const [friendsLoading, setFriendsLoading] = useState(true)
 	const [error, setError] = useState('')
 
@@ -93,9 +94,11 @@ export default function FriendsList() {
 					<div className='mb-6 max-w-[600px] w-full mx-auto flex justify-between items-start gap-4'>
 						<div className='flex-1'>
 							<FriendsSearch
-								onSearch={(q) => {
-									if (!q) return setDisplayFriends(friends)
-									const query = q.toLowerCase()
+								onSearch={(searchQuery) => {
+									setSearchQuery(searchQuery)
+									if (!searchQuery)
+										return setDisplayFriends(friends)
+									const query = searchQuery.toLowerCase()
 									setDisplayFriends(
 										friends.filter((f) =>
 											[f.name, f.email, f.phone]
@@ -108,6 +111,7 @@ export default function FriendsList() {
 										)
 									)
 								}}
+								value={searchQuery}
 							/>
 						</div>
 
@@ -119,7 +123,13 @@ export default function FriendsList() {
 						</div>
 					</div>
 					{displayFriends.length === 0 ? (
-						<EmptySearch />
+						<EmptySearch
+							query={searchQuery}
+							onClear={() => {
+								setDisplayFriends(friends)
+								setSearchQuery('')
+							}}
+						/>
 					) : (
 						<div className='max-w-[600px] grid gap-4 grid-cols-1  mx-auto'>
 							{displayFriends.map((friend) => (
