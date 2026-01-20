@@ -6,6 +6,7 @@ import { Friend } from '@/types/friend'
 import { useFriendModal } from '@/contexts/FriendModalContext'
 import FriendCard, { ClickableFriendCard } from './FriendCard'
 import FriendsFilteringControls from './FriendsFilteringControls'
+import FriendsSearch from './FriendsSearch'
 import EmptyState from './EmptyState'
 
 export default function FriendsList() {
@@ -88,11 +89,33 @@ export default function FriendsList() {
 				<EmptyState />
 			) : (
 				<>
-					<div className='mb-6 max-w-[600px] w-full mx-auto flex justify-end items-start'>
-						<FriendsFilteringControls
-							friends={friends}
-							onSorted={setDisplayFriends}
-						/>
+					<div className='mb-6 max-w-[600px] w-full mx-auto flex justify-between items-start gap-4'>
+						<div className='flex-1'>
+							<FriendsSearch
+								onSearch={(q) => {
+									if (!q) return setDisplayFriends(friends)
+									const query = q.toLowerCase()
+									setDisplayFriends(
+										friends.filter((f) =>
+											[f.name, f.email, f.phone]
+												.filter(Boolean)
+												.some((v) =>
+													v!
+														.toLowerCase()
+														.includes(query)
+												)
+										)
+									)
+								}}
+							/>
+						</div>
+
+						<div>
+							<FriendsFilteringControls
+								friends={friends}
+								onSorted={setDisplayFriends}
+							/>
+						</div>
 					</div>
 					<div className='max-w-[600px] grid gap-4 grid-cols-1  mx-auto'>
 						{displayFriends.map((friend) => (
