@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import {
 	Dialog,
@@ -16,6 +16,8 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { friendsService } from '@/lib/friendsService'
 import { FriendInput } from '@/types/friend'
+import { Input } from './ui/input'
+import { Textarea } from './ui/textarea'
 
 export default function FriendFormModal() {
 	const { isOpen, closeModal, editingFriend, notifySaved } = useFriendModal()
@@ -52,12 +54,10 @@ export default function FriendFormModal() {
 		}
 	}, [editingFriend, isOpen])
 
-	const nameRef = useRef<HTMLInputElement | null>(null)
-
 	useEffect(() => {
 		if (isOpen) {
 			// focus the name input when the modal opens
-			setTimeout(() => nameRef.current?.focus(), 0)
+			setTimeout(() => document.getElementById('friend-name')?.focus(), 0)
 		}
 	}, [isOpen])
 
@@ -101,8 +101,8 @@ export default function FriendFormModal() {
 						<label className='block text-sm font-medium mb-1'>
 							Name *
 						</label>
-						<input
-							ref={nameRef}
+						<Input
+							id='friend-name'
 							required
 							value={formData.name}
 							onChange={(e) =>
@@ -111,7 +111,6 @@ export default function FriendFormModal() {
 									name: e.target.value,
 								})
 							}
-							className='w-full px-3 py-2 border rounded bg-white dark:bg-zinc-800'
 						/>
 					</div>
 
@@ -119,7 +118,7 @@ export default function FriendFormModal() {
 						<label className='block text-sm font-medium mb-1'>
 							Email
 						</label>
-						<input
+						<Input
 							type='email'
 							value={formData.email}
 							onChange={(e) =>
@@ -128,7 +127,6 @@ export default function FriendFormModal() {
 									email: e.target.value,
 								})
 							}
-							className='w-full px-3 py-2 border rounded bg-white dark:bg-zinc-800'
 						/>
 					</div>
 
@@ -136,7 +134,7 @@ export default function FriendFormModal() {
 						<label className='block text-sm font-medium mb-1'>
 							Phone
 						</label>
-						<input
+						<Input
 							value={formData.phone}
 							onChange={(e) =>
 								setFormData({
@@ -144,7 +142,6 @@ export default function FriendFormModal() {
 									phone: e.target.value,
 								})
 							}
-							className='w-full px-3 py-2 border rounded bg-white dark:bg-zinc-800'
 						/>
 					</div>
 
@@ -152,7 +149,7 @@ export default function FriendFormModal() {
 						<label className='block text-sm font-medium mb-1'>
 							Birthday
 						</label>
-						<input
+						<Input
 							type='date'
 							value={formData.birthday}
 							onChange={(e) =>
@@ -161,7 +158,6 @@ export default function FriendFormModal() {
 									birthday: e.target.value,
 								})
 							}
-							className='w-full px-3 py-2 border rounded bg-white dark:bg-zinc-800'
 						/>
 					</div>
 
@@ -169,7 +165,7 @@ export default function FriendFormModal() {
 						<label className='block text-sm font-medium mb-1'>
 							Notes
 						</label>
-						<textarea
+						<Textarea
 							rows={3}
 							value={formData.notes}
 							onChange={(e) =>
@@ -178,7 +174,6 @@ export default function FriendFormModal() {
 									notes: e.target.value,
 								})
 							}
-							className='w-full px-3 py-2 border rounded bg-white dark:bg-zinc-800'
 						/>
 					</div>
 
