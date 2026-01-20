@@ -36,7 +36,7 @@ export default function BottomNav() {
 			className='fixed bottom-0 left-0 right-0 bg-white dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800 z-40'
 			style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
 		>
-			<div className='max-w-[600px] mx-auto'>
+			<div className='max-w-[680px] mx-auto'>
 				<nav className='relative flex items-center justify-between h-16'>
 					{/* left: theme toggle */}
 					<div className='flex items-center'>
