@@ -1,8 +1,8 @@
 'use client'
 
+import * as React from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from './ui/button'
-import IconButton from './IconButton'
 import ThemeToggle from './ThemeToggle'
 import { useAuth } from '@/contexts/AuthContext'
 import { useFriendModal } from '@/contexts/FriendModalContext'
@@ -44,47 +44,22 @@ export default function BottomNav() {
 					</div>
 					{/* center: grouped icon buttons (absolutely centered) */}
 					<div className='absolute left-1/2 transform -translate-x-1/2 flex items-center gap-4'>
-						<IconButton
-							onClick={(e) => {
-								e.preventDefault()
-								e.stopPropagation()
-								void router.push('/friends')
-							}}
-							icon={
-								<UserGroupIcon
-									className='w-full h-full text-zinc-700 dark:text-zinc-300'
-									aria-hidden='true'
-								/>
-							}
-							label='Friends'
+						<BottomNavIconButton
+							ariaLabel='Friends'
+							onAction={() => void router.push('/friends')}
+							Icon={UserGroupIcon}
 						/>
-						<IconButton
-							onClick={(e) => {
-								e.preventDefault()
-								e.stopPropagation()
-								void router.push('/settings')
-							}}
-							icon={
-								<Cog8ToothIcon
-									className='w-full h-full text-zinc-700 dark:text-zinc-300'
-									aria-hidden='true'
-								/>
-							}
-							label='Settings'
+
+						<BottomNavIconButton
+							ariaLabel='Settings'
+							onAction={() => void router.push('/settings')}
+							Icon={Cog8ToothIcon}
 						/>
-						<IconButton
-							onClick={(e) => {
-								e.preventDefault()
-								e.stopPropagation()
-								void handleLogout()
-							}}
-							icon={
-								<ArrowRightStartOnRectangleIcon
-									className='w-full h-full text-zinc-700 dark:text-zinc-300'
-									aria-hidden='true'
-								/>
-							}
-							label='Logout'
+
+						<BottomNavIconButton
+							ariaLabel='Logout'
+							onAction={() => void handleLogout()}
+							Icon={ArrowRightStartOnRectangleIcon}
 						/>
 					</div>
 					{/* right: add button */}
@@ -103,5 +78,33 @@ export default function BottomNav() {
 				</nav>
 			</div>
 		</footer>
+	)
+}
+
+function BottomNavIconButton({
+	Icon,
+	ariaLabel,
+	onAction,
+	iconClassName = 'text-zinc-700 dark:text-zinc-300',
+}: {
+	Icon: React.ElementType
+	ariaLabel: string
+	onAction?: () => void
+	iconClassName?: string
+}) {
+	return (
+		<Button
+			variant='outline'
+			size='lg'
+			onClick={(e) => {
+				e?.preventDefault()
+				e?.stopPropagation()
+				onAction && onAction()
+			}}
+			className='rounded-full w-12 h-12 p-0 flex items-center justify-center'
+			aria-label={ariaLabel}
+		>
+			<Icon className={iconClassName} aria-hidden='true' />
+		</Button>
 	)
 }
