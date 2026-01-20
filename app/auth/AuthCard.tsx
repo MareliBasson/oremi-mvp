@@ -31,7 +31,7 @@ export default function AuthCard({
 	footer,
 }: AuthCardProps) {
 	return (
-		<div className='flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-4'>
+		<div className='flex min-h-screen items-center justify-center p-4'>
 			<Card className='w-full max-w-md'>
 				<CardContent className='space-y-8 p-8'>
 					<div>

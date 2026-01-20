@@ -17,7 +17,7 @@ export default function FriendsPage() {
 
 	if (authLoading) {
 		return (
-			<div className='flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950'>
+			<div className='flex min-h-screen items-center justify-center'>
 				<div className='text-lg text-zinc-600 dark:text-zinc-400'>
 					Loading...
 				</div>
@@ -26,7 +26,7 @@ export default function FriendsPage() {
 	}
 
 	return (
-		<div className='min-h-screen bg-zinc-50 dark:bg-zinc-950'>
+		<div className='min-h-screen'>
 			<main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
 				<FriendsList />
 			</main>

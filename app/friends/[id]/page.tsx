@@ -109,7 +109,7 @@ export default function FriendPage() {
 	if (!friend) return null
 
 	return (
-		<div className='max-w-2xl mx-auto py-8'>
+		<div className='min-h-screen max-w-2xl mx-auto py-8'>
 			<Card>
 				<CardHeader>
 					<div className='flex flex-col items-center gap-2 py-6'>

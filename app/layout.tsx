@@ -26,6 +26,7 @@ export default function RootLayout({
 					<AuthProvider>
 						<FriendModalProvider>
 							<div
+								className=' bg-zinc-50 dark:bg-zinc-950'
 								style={{
 									paddingBottom:
 										'calc(4rem + env(safe-area-inset-bottom))',

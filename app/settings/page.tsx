@@ -41,7 +41,7 @@ export default function SettingsPage() {
 
 	if (loading) {
 		return (
-			<div className='flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950'>
+			<div className='flex min-h-screen items-center justify-center'>
 				<div className='text-lg text-zinc-600 dark:text-zinc-400'>
 					Loading...
 				</div>
@@ -50,7 +50,7 @@ export default function SettingsPage() {
 	}
 
 	return (
-		<div className='min-h-screen bg-zinc-50 dark:bg-zinc-950'>
+		<div className='min-h-screen '>
 			<main className='max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
 				{msg && (
 					<div className='mb-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 px-4 py-3 rounded'>
