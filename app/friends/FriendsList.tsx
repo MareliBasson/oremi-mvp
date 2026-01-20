@@ -54,21 +54,6 @@ export default function FriendsList() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [savedCount])
 
-	const handleEdit = (friend: Friend) => {
-		openModal(friend)
-	}
-
-	const handleDelete = async (friendId: string) => {
-		if (!confirm('Are you sure you want to delete this friend?')) return
-		try {
-			await friendsService.deleteFriend(friendId)
-			await loadFriends()
-		} catch (err) {
-			const error = err as Error
-			setError(error.message || 'Failed to delete friend')
-		}
-	}
-
 	if (friendsLoading) {
 		return (
 			<div className='text-center py-12'>
@@ -136,8 +121,6 @@ export default function FriendsList() {
 								<ClickableFriendCard
 									key={friend.id}
 									friend={friend}
-									onEdit={handleEdit}
-									onDelete={handleDelete}
 								/>
 							))}
 						</div>

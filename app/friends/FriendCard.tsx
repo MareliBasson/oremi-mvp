@@ -1,4 +1,3 @@
-import React from 'react'
 import Link from 'next/link'
 import { Friend } from '@/types/friend'
 import {
@@ -11,8 +10,6 @@ import {
 
 type FriendCardProps = {
 	friend: Friend
-	onEdit?: (friend: Friend) => void
-	onDelete?: (id: string) => void
 }
 
 function formatDate(input?: string) {
@@ -24,11 +21,7 @@ function formatDate(input?: string) {
 	}
 }
 
-export default function FriendCard({
-	friend,
-	onEdit,
-	onDelete,
-}: FriendCardProps) {
+export default function FriendCard({ friend }: FriendCardProps) {
 	return (
 		<Card className='hover:shadow-lg transition-shadow w-full'>
 			<CardHeader>
@@ -65,10 +58,10 @@ export default function FriendCard({
 }
 
 export function ClickableFriendCard(props: FriendCardProps) {
-	const { friend, onEdit, onDelete } = props
+	const { friend } = props
 	return (
 		<Link href={`/friends/${friend.id}`} className='block'>
-			<FriendCard friend={friend} onEdit={onEdit} onDelete={onDelete} />
+			<FriendCard friend={friend} />
 		</Link>
 	)
 }
