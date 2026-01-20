@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { Friend } from '@/types/friend'
+import { timeAgo, avatarGradient, initials } from '@/lib/utils'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
 	Card,
 	CardHeader,
@@ -22,13 +24,31 @@ function formatDate(input?: string) {
 }
 
 export default function FriendCard({ friend }: FriendCardProps) {
+	const fullName = `${friend.firstName}${
+		friend.lastName ? ' ' + friend.lastName : ''
+	}`.trim()
 	return (
 		<Card className='hover:shadow-lg transition-shadow w-full'>
 			<CardHeader>
-				<CardTitle>{friend.name}</CardTitle>
+				<div className='flex items-center gap-3'>
+					<Avatar className='w-20 h-20'>
+						<AvatarFallback
+							style={{ background: avatarGradient(fullName) }}
+							className='w-20 h-20 text-lg'
+						>
+							{initials(friend.firstName, friend.lastName)}
+						</AvatarFallback>
+					</Avatar>
+					<CardTitle className='!mb-0'>{fullName}</CardTitle>
+				</div>
 			</CardHeader>
 
 			<CardContent>
+				{friend.lastSeen && (
+					<p className='text-sm text-muted-foreground mb-1'>
+						👀 Last seen {timeAgo(friend.lastSeen)}
+					</p>
+				)}
 				{friend.email && (
 					<p className='text-sm text-muted-foreground mb-1'>
 						📧 {friend.email}

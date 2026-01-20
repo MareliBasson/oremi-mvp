@@ -85,15 +85,18 @@ export default function FriendsList() {
 										return setDisplayFriends(friends)
 									const query = searchQuery.toLowerCase()
 									setDisplayFriends(
-										friends.filter((f) =>
-											[f.name, f.email, f.phone]
+										friends.filter((f) => {
+											const name = `${f.firstName} ${
+												f.lastName || ''
+											}`.trim()
+											return [name, f.email, f.phone]
 												.filter(Boolean)
 												.some((v) =>
 													v!
 														.toLowerCase()
 														.includes(query)
 												)
-										)
+										})
 									)
 								}}
 								value={searchQuery}

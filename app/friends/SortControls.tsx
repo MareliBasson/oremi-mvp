@@ -39,8 +39,8 @@ export default function SortControls({ friends, onSorted }: SortControlsProps) {
 		const copy = [...friends]
 		copy.sort((a, b) => {
 			if (sortBy === 'name') {
-				const na = a.name || ''
-				const nb = b.name || ''
+				const na = `${a.firstName} ${a.lastName || ''}`.trim() || ''
+				const nb = `${b.firstName} ${b.lastName || ''}`.trim() || ''
 				const cmp = na.localeCompare(nb, undefined, {
 					sensitivity: 'base',
 				})

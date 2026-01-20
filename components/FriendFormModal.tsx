@@ -25,7 +25,8 @@ export default function FriendFormModal() {
 	const router = useRouter()
 
 	const [formData, setFormData] = useState<FriendInput>({
-		name: '',
+		firstName: '',
+		lastName: '',
 		email: '',
 		phone: '',
 		birthday: '',
@@ -37,7 +38,8 @@ export default function FriendFormModal() {
 	useEffect(() => {
 		if (editingFriend) {
 			setFormData({
-				name: editingFriend.name || '',
+				firstName: editingFriend.firstName || '',
+				lastName: editingFriend.lastName || '',
 				email: editingFriend.email || '',
 				phone: editingFriend.phone || '',
 				birthday: editingFriend.birthday || '',
@@ -45,7 +47,8 @@ export default function FriendFormModal() {
 			})
 		} else {
 			setFormData({
-				name: '',
+				firstName: '',
+				lastName: '',
 				email: '',
 				phone: '',
 				birthday: '',
@@ -56,8 +59,11 @@ export default function FriendFormModal() {
 
 	useEffect(() => {
 		if (isOpen) {
-			// focus the name input when the modal opens
-			setTimeout(() => document.getElementById('friend-name')?.focus(), 0)
+			// focus the first name input when the modal opens
+			setTimeout(
+				() => document.getElementById('friend-firstname')?.focus(),
+				0
+			)
 		}
 	}, [isOpen])
 
@@ -97,21 +103,39 @@ export default function FriendFormModal() {
 				</DialogHeader>
 
 				<form onSubmit={handleSubmit} className='space-y-3'>
-					<div>
-						<label className='block text-sm font-medium mb-1'>
-							Name *
-						</label>
-						<Input
-							id='friend-name'
-							required
-							value={formData.name}
-							onChange={(e) =>
-								setFormData({
-									...formData,
-									name: e.target.value,
-								})
-							}
-						/>
+					<div className='grid grid-cols-2 gap-3'>
+						<div>
+							<label className='block text-sm font-medium mb-1'>
+								First name *
+							</label>
+							<Input
+								id='friend-firstname'
+								required
+								value={formData.firstName}
+								onChange={(e) =>
+									setFormData({
+										...formData,
+										firstName: e.target.value,
+									})
+								}
+							/>
+						</div>
+
+						<div>
+							<label className='block text-sm font-medium mb-1'>
+								Last name
+							</label>
+							<Input
+								id='friend-lastname'
+								value={formData.lastName}
+								onChange={(e) =>
+									setFormData({
+										...formData,
+										lastName: e.target.value,
+									})
+								}
+							/>
+						</div>
 					</div>
 
 					<div>

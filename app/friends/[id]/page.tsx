@@ -6,6 +6,9 @@ import { useAuth } from '@/contexts/AuthContext'
 import { friendsService } from '@/lib/friendsService'
 import { Friend } from '@/types/friend'
 import { useFriendModal } from '@/contexts/FriendModalContext'
+import { timeAgo, avatarGradient, initials } from '@/lib/utils'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Separator } from '@/components/ui/separator'
 import {
 	Card,
 	CardHeader,
@@ -109,21 +112,98 @@ export default function FriendPage() {
 		<div className='max-w-2xl mx-auto py-8'>
 			<Card>
 				<CardHeader>
-					<CardTitle>{friend.name}</CardTitle>
+					<div className='flex flex-col items-center gap-2 py-6'>
+						<Avatar className='w-32 h-32'>
+							<AvatarFallback
+								style={{
+									background: avatarGradient(
+										`${friend.firstName} ${
+											friend.lastName || ''
+										}`
+									),
+								}}
+								className='w-32 h-32 text-2xl'
+							>
+								{initials(friend.firstName, friend.lastName)}
+							</AvatarFallback>
+						</Avatar>
+
+						<CardTitle className='mt-2 text-center text-2xl'>
+							{`${friend.firstName}${
+								friend.lastName ? ' ' + friend.lastName : ''
+							}`}
+						</CardTitle>
+						{friend.lastSeen ? (
+							<CardDescription className='text-sm text-muted-foreground'>
+								👀 Last seen {timeAgo(friend.lastSeen)}
+							</CardDescription>
+						) : (
+							<CardDescription className='text-sm text-muted-foreground'>
+								—
+							</CardDescription>
+						)}
+					</div>
 				</CardHeader>
+				<Separator />
 				<CardContent>
-					{friend.email && <p className='mb-2'>📧 {friend.email}</p>}
-					{friend.phone && <p className='mb-2'>📱 {friend.phone}</p>}
-					{friend.birthday && (
-						<p className='mb-2'>
-							🎂 {new Date(friend.birthday).toLocaleDateString()}
+					<div className='space-y-2'>
+						<p className='text-sm'>
+							<span className='font-semibold'>Email:</span>{' '}
+							<span className='text-muted-foreground'>
+								{friend.email || '—'}
+							</span>
 						</p>
-					)}
-					{friend.notes && (
-						<CardDescription className='mt-3 italic'>
-							{friend.notes}
-						</CardDescription>
-					)}
+						<p className='text-sm'>
+							<span className='font-semibold'>Phone:</span>{' '}
+							<span className='text-muted-foreground'>
+								{friend.phone || '—'}
+							</span>
+						</p>
+						<p className='text-sm'>
+							<span className='font-semibold'>Birthday:</span>{' '}
+							<span className='text-muted-foreground'>
+								{friend.birthday
+									? new Date(
+											friend.birthday
+									  ).toLocaleDateString()
+									: '—'}
+							</span>
+						</p>
+						<p className='text-sm'>
+							<span className='font-semibold'>Last seen:</span>{' '}
+							<span className='text-muted-foreground'>
+								{friend.lastSeen
+									? `👀 ${timeAgo(friend.lastSeen)}`
+									: '—'}
+							</span>
+						</p>
+						<div>
+							<p className='font-semibold mb-1'>Notes</p>
+							<div className='text-sm text-muted-foreground italic'>
+								{friend.notes || '—'}
+							</div>
+						</div>
+						<p className='text-sm'>
+							<span className='font-semibold'>Created:</span>{' '}
+							<span className='text-muted-foreground'>
+								{friend.createdAt
+									? new Date(
+											friend.createdAt
+									  ).toLocaleString()
+									: '—'}
+							</span>
+						</p>
+						<p className='text-sm'>
+							<span className='font-semibold'>Updated:</span>{' '}
+							<span className='text-muted-foreground'>
+								{friend.updatedAt
+									? new Date(
+											friend.updatedAt
+									  ).toLocaleString()
+									: '—'}
+							</span>
+						</p>
+					</div>
 				</CardContent>
 				<CardFooter className='gap-2'>
 					<Button variant='secondary' onClick={handleEdit}>

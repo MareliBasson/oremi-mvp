@@ -23,7 +23,8 @@ export const friendsService = {
 		const q = query(
 			collection(db, FRIENDS_COLLECTION),
 			where('userId', '==', userId),
-			orderBy('name', 'asc')
+			orderBy('firstName', 'asc'),
+			orderBy('lastName', 'asc')
 		)
 
 		const querySnapshot = await getDocs(q)
@@ -33,10 +34,12 @@ export const friendsService = {
 			const data = doc.data()
 			friends.push({
 				id: doc.id,
-				name: data.name,
+				firstName: data.firstName,
+				lastName: data.lastName,
 				email: data.email,
 				phone: data.phone,
 				birthday: data.birthday,
+				lastSeen: data.lastSeen?.toDate()?.toISOString(),
 				notes: data.notes,
 				createdAt:
 					data.createdAt?.toDate()?.toISOString() ||
@@ -60,6 +63,10 @@ export const friendsService = {
 			userId,
 			createdAt: now,
 			updatedAt: now,
+			// default lastSeen to now unless provided in friendData
+			lastSeen: friendData.lastSeen
+				? Timestamp.fromDate(new Date(friendData.lastSeen))
+				: now,
 		})
 
 		return docRef.id
@@ -95,16 +102,18 @@ export const friendsService = {
 		const data = snap.data()
 		return {
 			id: snap.id,
-			name: data.name,
+			firstName: data.firstName,
+			lastName: data.lastName,
 			email: data.email,
 			phone: data.phone,
 			birthday: data.birthday,
+			lastSeen: data.lastSeen?.toDate()?.toISOString(),
 			notes: data.notes,
 			createdAt:
-				data.createdAt?.toDate?.()?.toISOString() ||
+				data.createdAt?.toDate()?.toISOString() ||
 				new Date().toISOString(),
 			updatedAt:
-				data.updatedAt?.toDate?.()?.toISOString() ||
+				data.updatedAt?.toDate()?.toISOString() ||
 				new Date().toISOString(),
 			userId: data.userId,
 		}
