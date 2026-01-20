@@ -8,6 +8,7 @@ import FriendCard, { ClickableFriendCard } from './FriendCard'
 import FriendsFilteringControls from './FriendsFilteringControls'
 import FriendsSearch from './FriendsSearch'
 import EmptyState from './EmptyState'
+import EmptySearch from './EmptySearch'
 
 export default function FriendsList() {
 	const { user, saveSettings, settings, loading: authLoading } = useAuth()
@@ -85,7 +86,7 @@ export default function FriendsList() {
 				</div>
 			)}
 
-			{displayFriends.length === 0 ? (
+			{friends.length === 0 ? (
 				<EmptyState />
 			) : (
 				<>
@@ -117,16 +118,20 @@ export default function FriendsList() {
 							/>
 						</div>
 					</div>
-					<div className='max-w-[600px] grid gap-4 grid-cols-1  mx-auto'>
-						{displayFriends.map((friend) => (
-							<ClickableFriendCard
-								key={friend.id}
-								friend={friend}
-								onEdit={handleEdit}
-								onDelete={handleDelete}
-							/>
-						))}
-					</div>
+					{displayFriends.length === 0 ? (
+						<EmptySearch />
+					) : (
+						<div className='max-w-[600px] grid gap-4 grid-cols-1  mx-auto'>
+							{displayFriends.map((friend) => (
+								<ClickableFriendCard
+									key={friend.id}
+									friend={friend}
+									onEdit={handleEdit}
+									onDelete={handleDelete}
+								/>
+							))}
+						</div>
+					)}
 				</>
 			)}
 		</>
