@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { friendsService } from '@/lib/friendsService'
 import { Friend } from '@/types/friend'
 import { useFriendModal } from '@/contexts/FriendModalContext'
-import FriendCard, { ClickableFriendCard } from './FriendCard'
+import { ClickableFriendCard } from './FriendCard'
 import FriendsFilteringControls from './FriendsFilteringControls'
 import FriendsSearch from './FriendsSearch'
 import EmptyState from './EmptyState'
 import EmptySearch from './EmptySearch'
 
 export default function FriendsList() {
-	const { user, saveSettings, settings, loading: authLoading } = useAuth()
-	const { openModal, savedCount } = useFriendModal()
+	const { user, loading: authLoading } = useAuth()
+	const { savedCount } = useFriendModal()
 	const router = useRouter()
 
 	const [friends, setFriends] = useState<Friend[]>([])
@@ -54,6 +54,20 @@ export default function FriendsList() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [savedCount])
 
+	const handleSearch = (searchQuery: string) => {
+		setSearchQuery(searchQuery)
+		if (!searchQuery) return setDisplayFriends(friends)
+		const query = searchQuery.toLowerCase()
+		setDisplayFriends(
+			friends.filter((f) => {
+				const name = `${f.firstName} ${f.lastName || ''}`.trim()
+				return [name, f.email, f.phone]
+					.filter(Boolean)
+					.some((v) => v!.toLowerCase().includes(query))
+			})
+		)
+	}
+
 	if (friendsLoading) {
 		return (
 			<div className='text-center py-12'>
@@ -81,35 +95,7 @@ export default function FriendsList() {
 							<div className='flex items-center gap-4'>
 								<div className='flex-1'>
 									<FriendsSearch
-										onSearch={(searchQuery) => {
-											setSearchQuery(searchQuery)
-											if (!searchQuery)
-												return setDisplayFriends(
-													friends
-												)
-											const query =
-												searchQuery.toLowerCase()
-											setDisplayFriends(
-												friends.filter((f) => {
-													const name = `${
-														f.firstName
-													} ${
-														f.lastName || ''
-													}`.trim()
-													return [
-														name,
-														f.email,
-														f.phone,
-													]
-														.filter(Boolean)
-														.some((v) =>
-															v!
-																.toLowerCase()
-																.includes(query)
-														)
-												})
-											)
-										}}
+										onSearch={handleSearch}
 										value={searchQuery}
 									/>
 								</div>

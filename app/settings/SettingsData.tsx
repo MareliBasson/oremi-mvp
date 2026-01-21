@@ -56,7 +56,7 @@ export default function SettingsData() {
 		}
 	}
 
-	const handleImport = async (e: ChangeEvent<HTMLInputElement>) => {
+	const handleImportPreview = async (e: ChangeEvent<HTMLInputElement>) => {
 		setImportError(null)
 		setImportPreview(null)
 		const input = e.currentTarget as HTMLInputElement
@@ -100,6 +100,31 @@ export default function SettingsData() {
 		}
 	}
 
+	const handleImport = async () => {
+		if (!user || !importPreview) return
+		setImporting(true)
+		try {
+			for (const it of importPreview) {
+				if (!it.firstName) continue
+				await friendsService.addFriend(user.uid, {
+					firstName: it.firstName,
+					lastName: it.lastName,
+					email: it.email,
+					phone: it.phone,
+					birthday: it.birthday,
+					notes: it.notes,
+					lastSeen: it.lastSeen,
+				})
+			}
+			setImportPreview(null)
+		} catch (err) {
+			console.error(err)
+			setImportError('Import failed')
+		} finally {
+			setImporting(false)
+		}
+	}
+
 	return (
 		<>
 			<div className='space-y-4'>
@@ -122,7 +147,7 @@ export default function SettingsData() {
 							<input
 								type='file'
 								accept='application/json'
-								onChange={handleImport}
+								onChange={handleImportPreview}
 								style={{ display: 'none' }}
 							/>
 							<span>Upload Backup</span>
@@ -163,40 +188,7 @@ export default function SettingsData() {
 									<div className='flex gap-2'>
 										<Button
 											variant='default'
-											onClick={async () => {
-												if (!user || !importPreview)
-													return
-												setImporting(true)
-												try {
-													for (const it of importPreview) {
-														if (!it.firstName) continue
-														await friendsService.addFriend(
-															user.uid,
-															{
-																firstName:
-																	it.firstName,
-																lastName:
-																	it.lastName,
-																email: it.email,
-																phone: it.phone,
-																birthday:
-																	it.birthday,
-																notes: it.notes,
-																lastSeen:
-																	it.lastSeen,
-															}
-														)
-													}
-													setImportPreview(null)
-												} catch (err) {
-													console.error(err)
-													setImportError(
-														'Import failed'
-													)
-												} finally {
-													setImporting(false)
-												}
-											}}
+											onClick={handleImport}
 										>
 											{importing
 												? 'Importing...'
