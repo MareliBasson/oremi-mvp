@@ -193,7 +193,7 @@ export default function SettingsPage() {
 							}}
 						>
 							{importPreview && (
-								<DialogContent>
+								<DialogContent className='max-h-[80vh] w-full flex flex-col overflow-hidden'>
 									<DialogHeader>
 										<DialogTitle>
 											Import Preview
@@ -203,13 +203,13 @@ export default function SettingsPage() {
 											uploaded backup.
 										</DialogDescription>
 									</DialogHeader>
-									<div className='grid grid-cols-2 gap-2 mt-2'>
+									<div className='mt-2 flex-1 overflow-auto flex flex-col items-center gap-4 px-2'>
 										{importPreview
 											.slice(0, 20)
 											.map((it, i) => (
 												<div
 													key={i}
-													className='border rounded p-2 text-sm'
+													className='border rounded p-2 text-sm w-full'
 												>
 													<div className='font-semibold'>
 														{it.firstName}{' '}
@@ -221,7 +221,7 @@ export default function SettingsPage() {
 												</div>
 											))}
 									</div>
-									<DialogFooter className='mt-4'>
+									<DialogFooter className='mt-4 flex-none border-t pt-3 bg-background'>
 										<div className='flex gap-2'>
 											<Button
 												variant='default'
