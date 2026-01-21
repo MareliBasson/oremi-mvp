@@ -61,7 +61,7 @@ export default function FriendsList() {
 		setDisplayFriends(
 			friends.filter((f) => {
 				const name = `${f.firstName} ${f.lastName || ''}`.trim()
-				return [name, f.email, f.phone]
+				return [name, f.email]
 					.filter(Boolean)
 					.some((v) => v!.toLowerCase().includes(query))
 			})
