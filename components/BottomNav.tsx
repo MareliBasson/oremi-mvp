@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from './ui/button'
-import ThemeToggle from './ThemeToggle'
 import { useAuth } from '@/contexts/AuthContext'
 import { useFriendModal } from '@/contexts/FriendModalContext'
 import {
@@ -38,12 +37,7 @@ export default function BottomNav() {
 		>
 			<div className='max-w-[680px] mx-auto'>
 				<nav className='relative flex items-center justify-between h-16'>
-					{/* left: theme toggle */}
-					<div className='flex items-center'>
-						<ThemeToggle />
-					</div>
-					{/* center: grouped icon buttons (absolutely centered) */}
-					<div className='absolute left-1/2 transform -translate-x-1/2 flex items-center gap-4'>
+					<div className='flex items-center gap-4'>
 						<BottomNavIconButton
 							ariaLabel='Friends'
 							onAction={() => void router.push('/friends')}
@@ -62,15 +56,14 @@ export default function BottomNav() {
 							Icon={ArrowRightStartOnRectangleIcon}
 						/>
 					</div>
-					{/* right: add button */}
-					<div className='flex items-center'>
+					<div className='flex items-center justify-end w-full'>
 						<Button
 							onClick={(e) => {
 								e?.stopPropagation()
 								openModal()
 							}}
 							size='lg'
-							className='rounded-full'
+							className='rounded-full w-12 h-12 '
 						>
 							<PlusIcon className='w-6 h-6' aria-hidden='true' />
 						</Button>
