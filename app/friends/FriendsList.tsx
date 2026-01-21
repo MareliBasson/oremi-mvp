@@ -78,29 +78,45 @@ export default function FriendsList() {
 				<>
 					<div className='mb-10 max-w-[680px] w-full mx-auto flex justify-between items-start gap-4'>
 						<div className='flex-1'>
-							<FriendsSearch
-								onSearch={(searchQuery) => {
-									setSearchQuery(searchQuery)
-									if (!searchQuery)
-										return setDisplayFriends(friends)
-									const query = searchQuery.toLowerCase()
-									setDisplayFriends(
-										friends.filter((f) => {
-											const name = `${f.firstName} ${
-												f.lastName || ''
-											}`.trim()
-											return [name, f.email, f.phone]
-												.filter(Boolean)
-												.some((v) =>
-													v!
-														.toLowerCase()
-														.includes(query)
+							<div className='flex items-center gap-4'>
+								<div className='flex-1'>
+									<FriendsSearch
+										onSearch={(searchQuery) => {
+											setSearchQuery(searchQuery)
+											if (!searchQuery)
+												return setDisplayFriends(
+													friends
 												)
-										})
-									)
-								}}
-								value={searchQuery}
-							/>
+											const query =
+												searchQuery.toLowerCase()
+											setDisplayFriends(
+												friends.filter((f) => {
+													const name = `${
+														f.firstName
+													} ${
+														f.lastName || ''
+													}`.trim()
+													return [
+														name,
+														f.email,
+														f.phone,
+													]
+														.filter(Boolean)
+														.some((v) =>
+															v!
+																.toLowerCase()
+																.includes(query)
+														)
+												})
+											)
+										}}
+										value={searchQuery}
+									/>
+								</div>
+								<div className='text-sm text-muted-foreground'>
+									{displayFriends.length} friends
+								</div>
+							</div>
 						</div>
 
 						<div>
