@@ -17,6 +17,7 @@ import {
 	getSettings,
 	saveSettings,
 	subscribeToSettings,
+	createUserIfNotExists,
 } from '@/lib/settingsService'
 
 interface AuthContextType {
@@ -107,7 +108,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const signup = async (email: string, password: string) => {
 		const clientAuth = getClientAuth()
-		await createUserWithEmailAndPassword(clientAuth, email, password)
+		const cred = await createUserWithEmailAndPassword(
+			clientAuth,
+			email,
+			password
+		)
+		if (cred && cred.user) {
+			await createUserIfNotExists(
+				cred.user.uid,
+				cred.user.email || undefined,
+				cred.user.displayName || undefined,
+				cred.user.photoURL || undefined
+			)
+		}
 	}
 
 	const login = async (email: string, password: string) => {
@@ -123,7 +136,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	const signInWithGoogle = async () => {
 		const clientAuth = getClientAuth()
 		if (!googleProvider) throw new Error('Google provider not initialized')
-		await signInWithPopup(clientAuth, googleProvider)
+		const cred = await signInWithPopup(clientAuth, googleProvider)
+		if (cred && cred.user) {
+			await createUserIfNotExists(
+				cred.user.uid,
+				cred.user.email || undefined,
+				cred.user.displayName || undefined,
+				cred.user.photoURL || undefined
+			)
+		}
 	}
 
 	const saveSettingsForUser = async (newSettings: UserSettings) => {

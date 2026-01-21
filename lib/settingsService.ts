@@ -4,7 +4,6 @@ import {
 	setDoc,
 	serverTimestamp,
 	onSnapshot,
-	Firestore,
 } from 'firebase/firestore'
 import { db } from './firebase'
 
@@ -47,4 +46,44 @@ export function subscribeToSettings(
 		cb((data.settings as UserSettings) || {})
 	})
 	return unsub
+}
+
+// Ensure a user document exists for a newly created user.
+export async function createUserIfNotExists(
+	uid: string,
+	email?: string,
+	displayName?: string | null,
+	photoURL?: string | null
+): Promise<void> {
+	if (!db) throw new Error('Firebase not initialized')
+	const ref = doc(db, 'users', uid)
+	const snap = await getDoc(ref)
+	if (!snap.exists()) {
+		// derive first/last name from displayName when available
+		let firstName: string | undefined = undefined
+		let lastName: string | undefined = undefined
+		if (displayName) {
+			const parts = displayName.trim().split(/\s+/)
+			if (parts.length === 1) {
+				firstName = parts[0]
+			} else if (parts.length > 1) {
+				firstName = parts[0]
+				lastName = parts.slice(1).join(' ')
+			}
+		}
+
+		await setDoc(
+			ref,
+			{
+				createdAt: serverTimestamp(),
+				email,
+				displayName: displayName || null,
+				firstName: firstName || null,
+				lastName: lastName || null,
+				photoURL: photoURL || null,
+				settings: {},
+			},
+			{ merge: true }
+		)
+	}
 }
