@@ -55,7 +55,7 @@ export default function SettingsPage() {
 	}
 
 	return (
-		<div className='max-w-[680px] w-full mx-auto py-8 px-4'>
+		<div className='max-w-[680px] min-h-screen w-full mx-auto py-8 px-4'>
 			<Card>
 				<CardHeader>
 					<CardTitle>Global Preferences</CardTitle>
@@ -111,8 +111,14 @@ export default function SettingsPage() {
 									onChange={async (e) => {
 										setImportError(null)
 										setImportPreview(null)
-										const f = e.target.files?.[0]
-										if (!f) return
+										const input =
+											e.currentTarget as HTMLInputElement
+										const f = input.files?.[0]
+										if (!f) {
+											// clear value so same file can be selected later
+											input.value = ''
+											return
+										}
 										try {
 											const text = await f.text()
 											const j = JSON.parse(text)
@@ -169,6 +175,9 @@ export default function SettingsPage() {
 											setImportError(
 												'Failed to parse JSON'
 											)
+										} finally {
+											// clear value so selecting the same file again fires onChange
+											input.value = ''
 										}
 									}}
 									style={{ display: 'none' }}
@@ -214,16 +223,6 @@ export default function SettingsPage() {
 									</div>
 									<DialogFooter className='mt-4'>
 										<div className='flex gap-2'>
-											<Button
-												variant='destructive'
-												onClick={() => {
-													setImportError(
-														'Simulated import error'
-													)
-												}}
-											>
-												Trigger Error
-											</Button>
 											<Button
 												variant='default'
 												onClick={async () => {
