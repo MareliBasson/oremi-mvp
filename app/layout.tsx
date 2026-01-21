@@ -5,6 +5,7 @@ import { FriendModalProvider } from '@/contexts/FriendModalContext'
 import Providers from '@/components/ThemeProvider'
 import FriendFormModal from '@/components/FriendFormModal'
 import BottomNav from '@/components/BottomNav'
+import { Toaster } from '@/components/ui/sonner'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
@@ -23,6 +24,7 @@ export default function RootLayout({
 		<html lang='en' className={inter.variable}>
 			<body className='antialiased'>
 				<Providers>
+					<Toaster />
 					<AuthProvider>
 						<FriendModalProvider>
 							<div

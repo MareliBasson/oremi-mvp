@@ -12,9 +12,18 @@ import {
 	CardFooter,
 } from '@/components/ui/card'
 import { friendsService } from '@/lib/friendsService'
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogFooter,
+	DialogTitle,
+	DialogDescription,
+} from '@/components/ui/dialog'
+import { toast } from 'sonner'
 
 export default function SettingsPage() {
-	const { settings, saveSettings, loading, user } = useAuth()
+	const { loading, user } = useAuth()
 	const router = useRouter()
 
 	useEffect(() => {
@@ -23,33 +32,15 @@ export default function SettingsPage() {
 		}
 	}, [loading, user, router])
 
-	const [sortBy, setSortBy] = useState<'name' | 'createdAt'>('name')
-	const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-	const [saving, setSaving] = useState(false)
-	const [msg, setMsg] = useState<string | null>(null)
-
 	const [importPreview, setImportPreview] = useState<any[] | null>(null)
 	const [importing, setImporting] = useState(false)
 	const [importError, setImportError] = useState<string | null>(null)
 
 	useEffect(() => {
-		if (!settings) return
-		setSortBy(settings.sortBy || 'name')
-		setSortOrder(settings.sortOrder || 'asc')
-	}, [settings])
-
-	const handleSave = async () => {
-		try {
-			setSaving(true)
-			await saveSettings({ sortBy, sortOrder })
-			setMsg('Settings saved')
-		} catch (e) {
-			setMsg('Failed to save settings')
-		} finally {
-			setSaving(false)
-			setTimeout(() => setMsg(null), 2500)
+		if (importError) {
+			toast.error(importError)
 		}
-	}
+	}, [importError])
 
 	if (loading) {
 		return (
@@ -59,78 +50,6 @@ export default function SettingsPage() {
 						Loading...
 					</div>
 				</div>
-
-				{importError && (
-					<div className='mt-4 mb-2 text-sm text-red-600 dark:text-red-400'>
-						{importError}
-					</div>
-				)}
-
-				{importPreview && (
-					<div className='mt-4 card p-4'>
-						<p className='mb-2 text-sm'>
-							Preview {importPreview?.length} items
-						</p>
-						<div className='grid grid-cols-2 gap-2'>
-							{importPreview?.slice(0, 20).map((it, i) => (
-								<div
-									key={i}
-									className='border rounded p-2 text-sm'
-								>
-									<div className='font-semibold'>
-										{it.firstName} {it.lastName}
-									</div>
-									<div className='text-xs text-muted-foreground'>
-										{it.email || ''}
-									</div>
-								</div>
-							))}
-						</div>
-						<div className='mt-3 flex gap-2'>
-							<Button
-								variant='default'
-								onClick={async () => {
-									if (!user || !importPreview) return
-									setImporting(true)
-									try {
-										let success = 0
-										for (const it of importPreview) {
-											if (!it.firstName) continue
-											await friendsService.addFriend(
-												user.uid,
-												{
-													firstName: it.firstName,
-													lastName: it.lastName,
-													email: it.email,
-													phone: it.phone,
-													birthday: it.birthday,
-													notes: it.notes,
-													lastSeen: it.lastSeen,
-												}
-											)
-											success++
-										}
-										setMsg(`Imported ${success} items`)
-										setImportPreview(null)
-									} catch (err) {
-										console.error(err)
-										setImportError('Import failed')
-									} finally {
-										setImporting(false)
-									}
-								}}
-							>
-								{importing ? 'Importing...' : 'Import'}
-							</Button>
-							<Button
-								variant='ghost'
-								onClick={() => setImportPreview(null)}
-							>
-								Cancel
-							</Button>
-						</div>
-					</div>
-				)}
 			</>
 		)
 	}
@@ -144,50 +63,7 @@ export default function SettingsPage() {
 
 				<CardContent className='p-6'>
 					<div className='space-y-4'>
-						<div>
-							<label className='block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1'>
-								Sort by
-							</label>
-							<select
-								value={sortBy}
-								onChange={(e) =>
-									setSortBy(
-										e.target.value as 'name' | 'createdAt'
-									)
-								}
-								className='px-3 py-2 border rounded bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'
-							>
-								<option value='name'>Name</option>
-								<option value='createdAt'>Date added</option>
-							</select>
-						</div>
-
-						<div>
-							<label className='block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1'>
-								Sort order
-							</label>
-							<select
-								value={sortOrder}
-								onChange={(e) =>
-									setSortOrder(
-										e.target.value as 'asc' | 'desc'
-									)
-								}
-								className='px-3 py-2 border rounded bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white'
-							>
-								<option value='asc'>Ascending</option>
-								<option value='desc'>Descending</option>
-							</select>
-						</div>
-
 						<div className='flex gap-2'>
-							<Button
-								onClick={handleSave}
-								disabled={saving}
-								className='px-4 py-2'
-							>
-								{saving ? 'Saving...' : 'Save Settings'}
-							</Button>
 							<Button
 								variant='ghost'
 								onClick={async () => {
@@ -299,18 +175,112 @@ export default function SettingsPage() {
 								/>
 								<span>Upload Backup</span>
 							</label>
-							<Button
-								variant='ghost'
-								onClick={() => {
-									// reset to current settings
-									setSortBy(settings?.sortBy || 'name')
-									setSortOrder(settings?.sortOrder || 'asc')
-								}}
-								className='px-4 py-2'
-							>
-								Reset
-							</Button>
 						</div>
+
+						<Dialog
+							open={!!importPreview}
+							onOpenChange={(open) => {
+								if (!open) setImportPreview(null)
+							}}
+						>
+							{importPreview && (
+								<DialogContent>
+									<DialogHeader>
+										<DialogTitle>
+											Import Preview
+										</DialogTitle>
+										<DialogDescription className='mt-1'>
+											Preview the first 20 items from the
+											uploaded backup.
+										</DialogDescription>
+									</DialogHeader>
+									<div className='grid grid-cols-2 gap-2 mt-2'>
+										{importPreview
+											.slice(0, 20)
+											.map((it, i) => (
+												<div
+													key={i}
+													className='border rounded p-2 text-sm'
+												>
+													<div className='font-semibold'>
+														{it.firstName}{' '}
+														{it.lastName}
+													</div>
+													<div className='text-xs text-muted-foreground'>
+														{it.email || ''}
+													</div>
+												</div>
+											))}
+									</div>
+									<DialogFooter className='mt-4'>
+										<div className='flex gap-2'>
+											<Button
+												variant='destructive'
+												onClick={() => {
+													setImportError(
+														'Simulated import error'
+													)
+												}}
+											>
+												Trigger Error
+											</Button>
+											<Button
+												variant='default'
+												onClick={async () => {
+													if (!user || !importPreview)
+														return
+													setImporting(true)
+													try {
+														let success = 0
+														for (const it of importPreview) {
+															if (!it.firstName)
+																continue
+															await friendsService.addFriend(
+																user.uid,
+																{
+																	firstName:
+																		it.firstName,
+																	lastName:
+																		it.lastName,
+																	email: it.email,
+																	phone: it.phone,
+																	birthday:
+																		it.birthday,
+																	notes: it.notes,
+																	lastSeen:
+																		it.lastSeen,
+																}
+															)
+															success++
+														}
+														setImportPreview(null)
+													} catch (err) {
+														console.error(err)
+														setImportError(
+															'Import failed'
+														)
+													} finally {
+														setImporting(false)
+													}
+												}}
+											>
+												{importing
+													? 'Importing...'
+													: 'Import'}
+											</Button>
+											<Button
+												variant='ghost'
+												onClick={() =>
+													setImportPreview(null)
+												}
+											>
+												Cancel
+											</Button>
+										</div>
+									</DialogFooter>
+								</DialogContent>
+							)}
+						</Dialog>
 					</div>
 				</CardContent>
 			</Card>
