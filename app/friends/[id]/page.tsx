@@ -5,16 +5,10 @@ import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { friendsService } from '@/lib/friendsService'
 import { Friend } from '@/types/friend'
-import { useFriendModal } from '@/contexts/FriendModalContext'
+
 import { timeAgo, avatarGradient, initials } from '@/lib/utils'
 import Link from 'next/link'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import {
-	HoverCard,
-	HoverCardTrigger,
-	HoverCardContent,
-} from '@/components/ui/hover-card'
-import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import PersonalInfo from './PersonalInfo'
 import Notes from './Notes'
@@ -26,84 +20,20 @@ import {
 	CardFooter,
 	CardDescription,
 } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+
 import ActivityFeed from './ActivityFeed'
 import Favourites from './Favourites'
+import FriendActions from './FriendActions'
 
 export default function FriendPage() {
 	const params = useParams() as { id?: string }
 	const id = params?.id
 	const router = useRouter()
 	const { user, loading: authLoading } = useAuth()
-	const { openModal } = useFriendModal()
 
 	const [friend, setFriend] = useState<Friend | null>(null)
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string>('')
-
-	// Mock activity data for the timeline (populated per-friend)
-	const [activities, setActivities] = useState<
-		Array<{
-			id: string
-			date: string
-			event: string
-			participants: string[]
-			notes?: string
-		}>
-	>([])
-
-	const [newFav, setNewFav] = useState('')
-
-	useEffect(() => {
-		if (!friend) return
-		// Example mock activities — in a real app these would come from a service
-		setActivities([
-			{
-				id: 'a1',
-				date: new Date().toISOString(),
-				event: `Coffee with ${friend.firstName}`,
-				participants: [friend.firstName],
-			},
-			{
-				id: 'a2',
-				date: new Date(
-					Date.now() - 1000 * 60 * 60 * 24 * 3
-				).toISOString(),
-				event: 'Lunch',
-				participants: [friend.firstName, 'Alex'],
-			},
-			{
-				id: 'a3',
-				date: new Date(
-					Date.now() - 1000 * 60 * 60 * 24 * 20
-				).toISOString(),
-				event: 'Movie night',
-				participants: [friend.firstName, 'Sam', 'Taylor'],
-			},
-		])
-	}, [friend])
-
-	const addTagsToActivity = (activityId: string) => {
-		const toAdd = prompt('Add friend names (comma-separated) to tag:')
-		if (!toAdd) return
-		const names = toAdd
-			.split(',')
-			.map((s) => s.trim())
-			.filter(Boolean)
-		if (!names.length) return
-		setActivities((prev) =>
-			prev.map((a) =>
-				a.id === activityId
-					? {
-							...a,
-							participants: Array.from(
-								new Set([...a.participants, ...names])
-							),
-					  }
-					: a
-			)
-		)
-	}
 
 	useEffect(() => {
 		if (authLoading) return
@@ -146,23 +76,6 @@ export default function FriendPage() {
 		}
 	}, [id, user, authLoading, router])
 
-	const handleEdit = () => {
-		if (!friend) return
-		openModal(friend)
-	}
-
-	const handleDelete = async () => {
-		if (!friend) return
-		if (!confirm('Are you sure you want to delete this friend?')) return
-		try {
-			await friendsService.deleteFriend(friend.id)
-			router.push('/friends')
-		} catch (err) {
-			const e = err as Error
-			setError(e.message || 'Failed to delete friend')
-		}
-	}
-
 	if (loading) {
 		return <div className='text-center py-12'>Loading...</div>
 	}
@@ -180,6 +93,7 @@ export default function FriendPage() {
 		)
 	}
 
+	// TODO: Create a Friend not Found page
 	if (!friend) return null
 
 	return (
@@ -246,10 +160,7 @@ export default function FriendPage() {
 							value='activity'
 							className='min-h-[200px] px-2 mb-5'
 						>
-							<ActivityFeed
-								activities={activities}
-								onAddTags={addTagsToActivity}
-							/>
+							<ActivityFeed friend={friend} />
 						</TabsContent>
 
 						<TabsContent
@@ -263,19 +174,9 @@ export default function FriendPage() {
 						</TabsContent>
 					</Tabs>
 				</CardContent>
+
 				<CardFooter className='gap-2 bg-accent py-4'>
-					<Button variant='secondary' onClick={handleEdit}>
-						Edit
-					</Button>
-					<Button variant='destructive' onClick={handleDelete}>
-						Delete
-					</Button>
-					<Link
-						href='/friends'
-						className='ml-auto text-sm text-blue-600'
-					>
-						Back
-					</Link>
+					<FriendActions friend={friend} />
 				</CardFooter>
 			</Card>
 		</div>

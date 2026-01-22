@@ -1,6 +1,6 @@
 'use client'
+import React, { useEffect, useState } from 'react'
 
-import React from 'react'
 import Link from 'next/link'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
@@ -9,6 +9,7 @@ import {
 	HoverCardContent,
 } from '@/components/ui/hover-card'
 import { timeAgo, avatarGradient, initials } from '@/lib/utils'
+import { Friend } from '@/types/friend'
 
 type Activity = {
 	id: string
@@ -19,11 +20,72 @@ type Activity = {
 }
 
 type Props = {
-	activities: Activity[]
-	onAddTags: (activityId: string) => void
+	friend: Friend
 }
 
-export default function ActivityFeed({ activities, onAddTags }: Props) {
+export default function ActivityFeed({ friend }: Props) {
+	// Mock activity data for the timeline (populated per-friend)
+	const [activities, setActivities] = useState<
+		Array<{
+			id: string
+			date: string
+			event: string
+			participants: string[]
+			notes?: string
+		}>
+	>([])
+
+	useEffect(() => {
+		if (!friend) return
+		// Example mock activities — in a real app these would come from a service
+		setActivities([
+			{
+				id: 'a1',
+				date: new Date().toISOString(),
+				event: `Coffee with ${friend.firstName}`,
+				participants: [friend.firstName],
+			},
+			{
+				id: 'a2',
+				date: new Date(
+					Date.now() - 1000 * 60 * 60 * 24 * 3
+				).toISOString(),
+				event: 'Lunch',
+				participants: [friend.firstName, 'Alex'],
+			},
+			{
+				id: 'a3',
+				date: new Date(
+					Date.now() - 1000 * 60 * 60 * 24 * 20
+				).toISOString(),
+				event: 'Movie night',
+				participants: [friend.firstName, 'Sam', 'Taylor'],
+			},
+		])
+	}, [friend])
+
+	const addTagsToActivity = (activityId: string) => {
+		const toAdd = prompt('Add friend names (comma-separated) to tag:')
+		if (!toAdd) return
+		const names = toAdd
+			.split(',')
+			.map((s) => s.trim())
+			.filter(Boolean)
+		if (!names.length) return
+		setActivities((prev) =>
+			prev.map((a) =>
+				a.id === activityId
+					? {
+							...a,
+							participants: Array.from(
+								new Set([...a.participants, ...names])
+							),
+					  }
+					: a
+			)
+		)
+	}
+
 	if (!activities || activities.length === 0) {
 		return (
 			<div className='text-sm text-muted-foreground'>
@@ -124,7 +186,9 @@ export default function ActivityFeed({ activities, onAddTags }: Props) {
 										))}
 									</div>
 									<button
-										onClick={() => onAddTags(act.id)}
+										onClick={() =>
+											addTagsToActivity(act.id)
+										}
 										className='ml-3 text-sm text-blue-600 hover:underline'
 									>
 										Add tags
