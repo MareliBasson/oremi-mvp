@@ -74,12 +74,16 @@ export default function FriendFormModal() {
 			setLoading(true)
 			if (editingFriend) {
 				await friendsService.updateFriend(editingFriend.id, formData)
+				notifySaved()
+				// stay on the same page when editing
+				closeModal()
 			} else {
 				await friendsService.addFriend(user.uid, formData)
+				notifySaved()
+				// when adding a new friend, redirect to the list
+				void router.push('/friends')
+				closeModal()
 			}
-			notifySaved()
-			void router.push('/friends')
-			closeModal()
 		} catch (err) {
 			const error = err as Error
 			setError(error.message || 'Failed to save friend')
