@@ -8,6 +8,8 @@ export interface Friend {
 	// ISO string when we last saw this friend
 	lastSeen?: string
 	notes?: string
+	// list of favourite things (simple strings)
+	favouriteThings?: string[]
 	createdAt: string
 	updatedAt: string
 	userId: string
@@ -20,6 +22,7 @@ export interface FriendInput {
 	phone?: string
 	birthday?: string
 	notes?: string
+	favouriteThings?: string[]
 	// optionally set lastSeen when creating/updating
 	lastSeen?: string
 }

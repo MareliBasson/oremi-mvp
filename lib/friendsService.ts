@@ -41,6 +41,7 @@ export const friendsService = {
 				birthday: data.birthday,
 				lastSeen: data.lastSeen?.toDate()?.toISOString(),
 				notes: data.notes,
+				favouriteThings: data.favouriteThings || [],
 				createdAt:
 					data.createdAt?.toDate()?.toISOString() ||
 					new Date().toISOString(),
@@ -67,6 +68,7 @@ export const friendsService = {
 			lastSeen: friendData.lastSeen
 				? Timestamp.fromDate(new Date(friendData.lastSeen))
 				: now,
+			favouriteThings: friendData.favouriteThings || [],
 		})
 
 		return docRef.id
@@ -109,6 +111,7 @@ export const friendsService = {
 			birthday: data.birthday,
 			lastSeen: data.lastSeen?.toDate()?.toISOString(),
 			notes: data.notes,
+			favouriteThings: data.favouriteThings || [],
 			createdAt:
 				data.createdAt?.toDate()?.toISOString() ||
 				new Date().toISOString(),
