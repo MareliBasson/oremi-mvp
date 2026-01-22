@@ -27,6 +27,7 @@ import {
 	CardDescription,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import ActivityFeed from './ActivityFeed'
 
 export default function FriendPage() {
 	const params = useParams() as { id?: string }
@@ -244,135 +245,10 @@ export default function FriendPage() {
 							value='activity'
 							className='min-h-[200px] px-2 mb-5'
 						>
-							{activities.length === 0 ? (
-								<div className='text-sm text-muted-foreground'>
-									No activity yet.
-								</div>
-							) : (
-								<ul className='border-l border-muted-foreground/20 pl-4 space-y-6'>
-									{activities
-										.sort(
-											(a, b) =>
-												+new Date(b.date) -
-												+new Date(a.date)
-										)
-										.map((act) => (
-											<li
-												key={act.id}
-												className='relative'
-											>
-												<span className='absolute -left-2 top-1 w-3 h-3 rounded-full bg-background border border-muted-foreground' />
-												<div className='pl-4'>
-													<div className='mt-2'>
-														<div className='text-xs text-muted-foreground'>
-															{(() => {
-																const d =
-																	new Date(
-																		act.date
-																	)
-																const now =
-																	new Date()
-																const days =
-																	Math.floor(
-																		(Date.UTC(
-																			now.getFullYear(),
-																			now.getMonth(),
-																			now.getDate()
-																		) -
-																			Date.UTC(
-																				d.getFullYear(),
-																				d.getMonth(),
-																				d.getDate()
-																			)) /
-																			(1000 *
-																				60 *
-																				60 *
-																				24)
-																	)
-																if (days > 7) {
-																	return d.toLocaleDateString(
-																		undefined,
-																		{
-																			day: '2-digit',
-																			month: 'long',
-																			year: '2-digit',
-																		}
-																	)
-																}
-																return timeAgo(
-																	act.date
-																)
-															})()}
-														</div>
-														<div className='text-sm font-semibold mt-1'>
-															{act.event}
-														</div>
-
-														<div className='mt-2 flex items-center'>
-															<div className='flex -space-x-2'>
-																{act.participants.map(
-																	(p) => (
-																		<HoverCard
-																			key={
-																				p
-																			}
-																		>
-																			<HoverCardTrigger
-																				asChild
-																			>
-																				<Link
-																					href={`/friends?q=${encodeURIComponent(
-																						p
-																					)}`}
-																					className='inline-block rounded-full ring-2 ring-background'
-																				>
-																					<Avatar className='w-8 h-8'>
-																						<AvatarFallback
-																							style={{
-																								background:
-																									avatarGradient(
-																										p
-																									),
-																							}}
-																							className='text-white font-semibold drop-shadow-md'
-																						>
-																							{initials(
-																								p.split(
-																									' '
-																								)[0],
-																								p
-																									.split(
-																										' '
-																									)
-																									.slice(
-																										1
-																									)
-																									.join(
-																										' '
-																									)
-																							)}
-																						</AvatarFallback>
-																					</Avatar>
-																				</Link>
-																			</HoverCardTrigger>
-																			<HoverCardContent>
-																				<div className='font-semibold'>
-																					{
-																						p
-																					}
-																				</div>
-																			</HoverCardContent>
-																		</HoverCard>
-																	)
-																)}
-															</div>
-														</div>
-													</div>
-												</div>
-											</li>
-										))}
-								</ul>
-							)}
+							<ActivityFeed
+								activities={activities}
+								onAddTags={addTagsToActivity}
+							/>
 						</TabsContent>
 
 						<TabsContent
