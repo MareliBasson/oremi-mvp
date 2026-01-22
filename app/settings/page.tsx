@@ -6,8 +6,8 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { toast } from 'sonner'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import ThemeToggle from '@/components/ThemeToggle'
 import SettingsData from './SettingsData'
+import Preferences from './Preferences'
 
 export default function SettingsPage() {
 	const { loading, user } = useAuth()
@@ -43,7 +43,7 @@ export default function SettingsPage() {
 				</CardHeader>
 
 				<CardContent className='p-6'>
-					<Tabs defaultValue='backup'>
+					<Tabs defaultValue='preferences'>
 						<TabsList className='w-full mb-6' variant='line'>
 							<TabsTrigger value='preferences'>
 								Preferences
@@ -52,12 +52,7 @@ export default function SettingsPage() {
 						</TabsList>
 
 						<TabsContent value='preferences'>
-							<div className='py-4 flex items-center justify-between'>
-								<div className='text-sm text-muted-foreground'>
-									Theme
-								</div>
-								<ThemeToggle />
-							</div>
+							<Preferences />
 						</TabsContent>
 
 						<TabsContent value='backup'>

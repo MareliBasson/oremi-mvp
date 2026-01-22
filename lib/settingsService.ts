@@ -10,6 +10,8 @@ import { db } from './firebase'
 export type UserSettings = {
 	sortBy?: 'name' | 'createdAt'
 	sortOrder?: 'asc' | 'desc'
+	// How often the user wants to check in with friends
+	checkInFrequency?: 'none' | 'daily' | 'weekly' | 'biweekly' | 'monthly'
 }
 
 export async function getSettings(uid: string): Promise<UserSettings> {
