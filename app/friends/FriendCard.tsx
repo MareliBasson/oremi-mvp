@@ -1,7 +1,14 @@
 import Link from 'next/link'
 import { Friend } from '@/types/friend'
-import { timeAgo, avatarGradient, initials } from '@/lib/utils'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import {
+	timeAgo,
+	avatarGradient,
+	getInitials,
+	getFullName,
+	isFriendOverdue,
+} from '@/lib/utils'
+import { Avatar, AvatarFallback, AvatarBadge } from '@/components/ui/avatar'
+import { useAuth } from '@/contexts/AuthContext'
 import {
 	Card,
 	CardHeader,
@@ -24,9 +31,10 @@ function formatDate(input?: string) {
 }
 
 export default function FriendCard({ friend }: FriendCardProps) {
-	const fullName = `${friend.firstName}${
-		friend.lastName ? ' ' + friend.lastName : ''
-	}`.trim()
+	const { settings } = useAuth()
+
+	const fullName = getFullName(friend)
+
 	return (
 		<Card className='hover:shadow-lg transition-shadow w-full'>
 			<CardHeader>
@@ -36,8 +44,11 @@ export default function FriendCard({ friend }: FriendCardProps) {
 							style={{ background: avatarGradient(fullName) }}
 							className='w-14 h-14 text-base font-semibold text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]'
 						>
-							{initials(friend.firstName, friend.lastName)}
+							{getInitials(friend.firstName, friend.lastName)}
 						</AvatarFallback>
+						{isFriendOverdue(friend, settings ?? undefined) && (
+							<AvatarBadge className='bg-red-600 ring-red-200 dark:ring-red-800' />
+						)}
 					</Avatar>
 					<div className='flex flex-col'>
 						<CardTitle className='mb-2'>{fullName}</CardTitle>

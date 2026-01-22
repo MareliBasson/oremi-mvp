@@ -8,7 +8,7 @@ import {
 	HoverCardTrigger,
 	HoverCardContent,
 } from '@/components/ui/hover-card'
-import { timeAgo, avatarGradient, initials } from '@/lib/utils'
+import { timeAgo, avatarGradient, getInitials } from '@/lib/utils'
 import { Friend } from '@/types/friend'
 
 type Activity = {
@@ -158,7 +158,7 @@ export default function ActivityFeed({ friend }: Props) {
 																}}
 																className='text-white font-semibold drop-shadow-md'
 															>
-																{initials(
+																{getInitials(
 																	p.split(
 																		' '
 																	)[0],

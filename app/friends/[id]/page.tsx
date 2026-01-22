@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { friendsService } from '@/lib/friendsService'
 import { Friend } from '@/types/friend'
 
-import { timeAgo, avatarGradient, initials } from '@/lib/utils'
+import { timeAgo, avatarGradient, getInitials, getFullName } from '@/lib/utils'
 import Link from 'next/link'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -112,13 +112,11 @@ export default function FriendPage() {
 								}}
 								className='w-24 h-24 text-3xl font-semibold text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)]'
 							>
-								{initials(friend.firstName, friend.lastName)}
+								{getInitials(friend.firstName, friend.lastName)}
 							</AvatarFallback>
 						</Avatar>
 						<CardTitle className='mt-2 text-center text-2xl'>
-							{`${friend.firstName}${
-								friend.lastName ? ' ' + friend.lastName : ''
-							}`}
+							{getFullName(friend)}
 						</CardTitle>
 						{friend.lastSeen ? (
 							<CardDescription className='text-sm text-muted-foreground'>

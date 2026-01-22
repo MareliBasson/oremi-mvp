@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import type { Friend } from '@/types/friend'
+import type { UserSettings } from './settingsService'
 
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
@@ -59,10 +61,47 @@ export function avatarGradient(seed?: string) {
 	return `linear-gradient(135deg, ${a} 0%, ${b} 100%)`
 }
 
-export function initials(firstName?: string, lastName?: string) {
+export function getInitials(firstName?: string, lastName?: string) {
 	const f = firstName?.trim() || ''
 	const l = lastName?.trim() || ''
 	if (!f && !l) return '?'
 	if (!l) return f.slice(0, 2).toUpperCase()
 	return (f[0] + l[0]).toUpperCase()
+}
+
+export function getFullName(friend?: Pick<Friend, 'firstName' | 'lastName'>) {
+	if (!friend) return ''
+	return `${friend.firstName}${
+		friend.lastName ? ' ' + friend.lastName : ''
+	}`.trim()
+}
+
+export function isFriendOverdue(friend: Friend, settings?: UserSettings) {
+	if (!settings) return false
+	if (settings.checkInEnabled === false) return false
+	const freq = settings.checkInFrequency
+	if (!freq) return false
+
+	const every = (freq as any).every || 1
+	let ms = 0
+	switch ((freq as any).interval) {
+		case 'seconds':
+			ms = every * 1000
+			break
+		case 'days':
+			ms = every * 24 * 60 * 60 * 1000
+			break
+		case 'weeks':
+			ms = every * 7 * 24 * 60 * 60 * 1000
+			break
+		case 'months':
+			ms = every * 30 * 24 * 60 * 60 * 1000
+			break
+		default:
+			return false
+	}
+
+	if (!friend.lastSeen) return true
+	const last = new Date(friend.lastSeen).getTime()
+	return last < Date.now() - ms
 }
