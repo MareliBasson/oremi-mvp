@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/hover-card'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import PersonalInfo from './PersonalInfo'
 import {
 	Card,
 	CardHeader,
@@ -228,36 +229,7 @@ export default function FriendPage() {
 							value='info'
 							className='min-h-[200px] px-2 mb-5'
 						>
-							<div className='space-y-2'>
-								<p className='text-sm'>
-									<span className='font-semibold'>
-										Email:
-									</span>{' '}
-									<span className='text-muted-foreground'>
-										{friend.email || '—'}
-									</span>
-								</p>
-								<p className='text-sm'>
-									<span className='font-semibold'>
-										Phone:
-									</span>{' '}
-									<span className='text-muted-foreground'>
-										{friend.phone || '—'}
-									</span>
-								</p>
-								<p className='text-sm'>
-									<span className='font-semibold'>
-										Birthday:
-									</span>{' '}
-									<span className='text-muted-foreground'>
-										{friend.birthday
-											? new Date(
-													friend.birthday
-											  ).toLocaleDateString()
-											: '—'}
-									</span>
-								</p>
-							</div>
+							<PersonalInfo friend={friend} />
 						</TabsContent>
 
 						<TabsContent
