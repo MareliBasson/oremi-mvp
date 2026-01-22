@@ -17,6 +17,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import PersonalInfo from './PersonalInfo'
+import Notes from './Notes'
 import {
 	Card,
 	CardHeader,
@@ -236,12 +237,7 @@ export default function FriendPage() {
 							value='notes'
 							className='min-h-[200px] px-2 mb-5'
 						>
-							<div>
-								<p className='font-semibold mb-1'>Notes</p>
-								<div className='text-sm text-muted-foreground italic'>
-									{friend.notes || '—'}
-								</div>
-							</div>
+							<Notes friend={friend} />
 						</TabsContent>
 
 						<TabsContent
