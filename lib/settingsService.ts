@@ -13,6 +13,7 @@ export type UserSettings = {
 	// How often the user wants to check in with friends.
 	// New shape supports an interval + number (every N units).
 	checkInFrequency?:
+		| { interval: 'seconds'; every: number }
 		| { interval: 'days'; every: number }
 		| { interval: 'weeks'; every: number }
 		| { interval: 'months'; every: number }

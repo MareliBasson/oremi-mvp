@@ -19,9 +19,10 @@ import {
 import { toast } from 'sonner'
 
 const INTERVALS: {
-	value: 'days' | 'weeks' | 'months'
+	value: 'seconds' | 'days' | 'weeks' | 'months'
 	label: string
 }[] = [
+	{ value: 'seconds', label: 'Seconds' },
 	{ value: 'days', label: 'Days' },
 	{ value: 'weeks', label: 'Weeks' },
 	{ value: 'months', label: 'Months' },
@@ -119,7 +120,7 @@ export default function PreferencesCheckins() {
 			saveIntervalAmount.current = window.setTimeout(() => {
 				void handleIntervalChange(intervalType, val)
 				saveIntervalAmount.current = null
-			}, 400)
+			}, 600)
 		},
 		[intervalType, handleIntervalChange]
 	)
