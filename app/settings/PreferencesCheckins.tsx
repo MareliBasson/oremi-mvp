@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import {
 	Select,
 	SelectTrigger,
@@ -8,6 +8,8 @@ import {
 	SelectContent,
 	SelectItem,
 } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { Input } from '@/components/ui/input'
 import { useAuth } from '@/contexts/AuthContext'
 import {
 	saveSettings,
@@ -17,10 +19,9 @@ import {
 import { toast } from 'sonner'
 
 const INTERVALS: {
-	value: 'none' | 'days' | 'weeks' | 'months'
+	value: 'days' | 'weeks' | 'months'
 	label: string
 }[] = [
-	{ value: 'none', label: 'No reminders' },
 	{ value: 'days', label: 'Days' },
 	{ value: 'weeks', label: 'Weeks' },
 	{ value: 'months', label: 'Months' },
@@ -30,104 +31,177 @@ type CheckInSetting = NonNullable<UserSettings['checkInFrequency']>
 
 export default function PreferencesCheckins() {
 	const { user } = useAuth()
-	const [interval, setInterval] = useState<CheckInSetting['interval']>('none')
-	const [every, setEvery] = useState<number>(1)
-	const [loading, setLoading] = useState(true)
+	const [intervalType, setIntervalType] =
+		useState<CheckInSetting['interval']>('weeks')
+	const [intervalAmount, setIntervalAmount] = useState<number>(1)
+	const [enabled, setEnabled] = useState<boolean>(false)
+	const [lastInterval, setLastInterval] =
+		useState<CheckInSetting['interval']>('weeks')
+	const [lastEvery, setLastEvery] = useState<number>(1)
+
+	const saveIntervalAmount = useRef<number | null>(null)
 
 	useEffect(() => {
 		if (!user) return
 		let unsub: (() => void) | undefined
 		try {
-			unsub = subscribeToSettings(user.uid, (s) => {
-				const raw = s.checkInFrequency as any
-				if (!raw) {
-					setInterval('none')
-					setEvery(1)
-				} else if (typeof raw === 'string') {
-					switch (raw) {
-						case 'daily':
-							setInterval('days')
-							setEvery(1)
-							break
-						case 'weekly':
-							setInterval('weeks')
-							setEvery(1)
-							break
-						case 'biweekly':
-							setInterval('weeks')
-							setEvery(2)
-							break
-						case 'monthly':
-							setInterval('months')
-							setEvery(1)
-							break
-						default:
-							setInterval('none')
-							setEvery(1)
-					}
-				} else if (typeof raw === 'object') {
-					setInterval(raw.interval || 'none')
-					setEvery(raw.every ?? 1)
+			unsub = subscribeToSettings(user.uid, (settings) => {
+				const frequency = settings.checkInFrequency as any
+				const explicitEnabled =
+					typeof settings.checkInEnabled === 'boolean'
+						? settings.checkInEnabled
+						: undefined
+				if (frequency && typeof frequency === 'object') {
+					setIntervalType(frequency.interval)
+					setIntervalAmount(frequency.every ?? 1)
+					setEnabled(explicitEnabled ?? true)
+					setLastInterval(frequency.interval)
+					setLastEvery(frequency.every ?? 1)
+				} else {
+					// No explicit object-shaped frequency saved — default values
+					setIntervalAmount(1)
+					setEnabled(explicitEnabled ?? false)
 				}
-				setLoading(false)
 			})
 		} catch (err) {
 			console.error(err)
 			toast.error('Failed to load preferences')
-			setLoading(false)
 		}
 		return () => unsub && unsub()
 	}, [user])
 
-	const persist = async (intv: CheckInSetting['interval'], num: number) => {
-		if (!user) return
-		try {
-			if (intv === 'none') {
-				await saveSettings(user.uid, {
-					checkInFrequency: { interval: 'none' },
-				})
-			} else {
-				await saveSettings(user.uid, {
-					checkInFrequency: {
-						interval: intv,
-						every: Math.max(1, Math.floor(num)),
-					},
-				})
+	const handleIntervalChange = useCallback(
+		async (intervalType: CheckInSetting['interval'], num: number) => {
+			if (!user) return
+			try {
+				if (!intervalType) return
+				if (!intervalType || (intervalType as string) === '') {
+					await saveSettings(user.uid, { checkInEnabled: false })
+				} else {
+					await saveSettings(user.uid, {
+						checkInFrequency: {
+							interval: intervalType,
+							every: Math.max(1, Math.floor(num)),
+						},
+						checkInEnabled: true,
+					})
+				}
+				toast.success('Preferences saved')
+			} catch (err) {
+				console.error(err)
+				toast.error('Failed to save preferences')
 			}
-			toast.success('Preferences saved')
-		} catch (err) {
-			console.error(err)
-			toast.error('Failed to save preferences')
+		},
+		[user]
+	)
+
+	const onIntervalTypeChange = useCallback(
+		(intervalType: CheckInSetting['interval']) => {
+			setIntervalType(intervalType)
+			setEnabled(true)
+			setLastInterval(intervalType)
+			setLastEvery(intervalAmount)
+			void handleIntervalChange(intervalType, intervalAmount)
+		},
+		[intervalAmount, handleIntervalChange]
+	)
+
+	const onIntervalAmountChange = useCallback(
+		(n: number) => {
+			const val = Math.max(1, Math.floor(n || 1))
+			setIntervalAmount(val)
+			setLastEvery(val)
+
+			if (saveIntervalAmount.current) {
+				window.clearTimeout(saveIntervalAmount.current)
+			}
+
+			saveIntervalAmount.current = window.setTimeout(() => {
+				void handleIntervalChange(intervalType, val)
+				saveIntervalAmount.current = null
+			}, 400)
+		},
+		[intervalType, handleIntervalChange]
+	)
+
+	useEffect(() => {
+		return () => {
+			if (saveIntervalAmount.current)
+				window.clearTimeout(saveIntervalAmount.current)
 		}
-	}
+	}, [])
 
-	const onIntervalChange = (v: CheckInSetting['interval']) => {
-		setInterval(v)
-		if (v === 'none') void persist('none', 1)
-		else void persist(v, every)
-	}
-
-	const onEveryChange = (n: number) => {
-		const val = Math.max(1, Math.floor(n || 1))
-		setEvery(val)
-		void persist(interval, val)
-	}
+	const handleCheckinToggle = useCallback(
+		async (nextChecked: boolean) => {
+			const next = Boolean(nextChecked)
+			setEnabled(next)
+			if (!next) {
+				// preserve current selection as "last" before disabling
+				setLastInterval(intervalType)
+				setLastEvery(intervalAmount)
+				try {
+					if (!user) return
+					await saveSettings(user.uid, { checkInEnabled: false })
+					toast.success('Preferences saved')
+				} catch (err) {
+					console.error(err)
+					toast.error('Failed to save preferences')
+				}
+			} else {
+				setIntervalType(lastInterval)
+				setIntervalAmount(lastEvery)
+				void handleIntervalChange(lastInterval, lastEvery)
+			}
+		},
+		[
+			intervalAmount,
+			intervalType,
+			lastEvery,
+			lastInterval,
+			handleIntervalChange,
+			user,
+		]
+	)
 
 	return (
-		<div className='py-4'>
-			<div className='mb-2 text-sm font-semibold'>Check-in reminders</div>
-			<div className='text-sm text-muted-foreground'>
-				How often would you like to be reminded to check in with your
-				friends?
+		<div className='py-2'>
+			<div className='flex items-center justify-between'>
+				<div className='text-sm font-semibold'>
+					Enable check-in reminders
+				</div>
+				<div>
+					<Switch
+						checked={enabled}
+						onCheckedChange={handleCheckinToggle}
+					/>
+				</div>
 			</div>
 
-			<div className='mt-3 flex items-center gap-3'>
-				<div className='min-w-[160px]'>
+			<div className='w-full mt-3 flex items-start justify-between'>
+				<div className='text-sm text-muted-foreground max-w-prose'>
+					How often would you like to be reminded to check in with
+					your friends?
+				</div>
+
+				<div className='flex items-center justify-between gap-3 ml-6'>
+					<Input
+						type='number'
+						min={1}
+						value={intervalAmount}
+						onChange={(e) =>
+							onIntervalAmountChange(Number(e.target.value))
+						}
+						disabled={!enabled}
+						className={'w-18 ' + (!enabled ? 'opacity-50' : '')}
+						aria-label='Number of intervals'
+					/>
+
 					<Select
-						value={interval}
-						onValueChange={(v) => onIntervalChange(v as any)}
+						value={intervalType}
+						onValueChange={(v) => onIntervalTypeChange(v as any)}
+						disabled={!enabled}
 					>
-						<SelectTrigger>
+						<SelectTrigger className='min-w-[120px]'>
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent position='popper' align='end'>
@@ -139,23 +213,6 @@ export default function PreferencesCheckins() {
 						</SelectContent>
 					</Select>
 				</div>
-
-				{interval !== 'none' && (
-					<div className='flex items-center gap-2'>
-						<input
-							type='number'
-							min={1}
-							value={every}
-							onChange={(e) =>
-								onEveryChange(Number(e.target.value))
-							}
-							className='input input-sm w-24'
-						/>
-						<div className='text-sm text-muted-foreground'>
-							times
-						</div>
-					</div>
-				)}
 			</div>
 		</div>
 	)

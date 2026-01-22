@@ -13,10 +13,11 @@ export type UserSettings = {
 	// How often the user wants to check in with friends.
 	// New shape supports an interval + number (every N units).
 	checkInFrequency?:
-		| { interval: 'none' }
 		| { interval: 'days'; every: number }
 		| { interval: 'weeks'; every: number }
 		| { interval: 'months'; every: number }
+	// Whether check-in reminders are enabled for the user.
+	checkInEnabled?: boolean
 }
 
 export async function getSettings(uid: string): Promise<UserSettings> {
