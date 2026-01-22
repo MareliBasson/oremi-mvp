@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import ActivityFeed from './ActivityFeed'
+import Favourites from './Favourites'
 
 export default function FriendPage() {
 	const params = useParams() as { id?: string }
@@ -223,7 +224,7 @@ export default function FriendPage() {
 							<TabsTrigger value='notes'>Notes</TabsTrigger>
 							<TabsTrigger value='activity'>Activity</TabsTrigger>
 							<TabsTrigger value='favourites'>
-								Favourite things
+								Favourites
 							</TabsTrigger>
 						</TabsList>
 
@@ -255,120 +256,10 @@ export default function FriendPage() {
 							value='favourites'
 							className='min-h-[200px] px-2 mb-5'
 						>
-							<div>
-								<p className='font-semibold mb-2'>
-									Favourite things
-								</p>
-								<div className='space-y-3'>
-									{(friend.favouriteThings || []).length ===
-									0 ? (
-										<div className='text-sm text-muted-foreground'>
-											No favourites added.
-										</div>
-									) : (
-										<ul className='list-disc pl-5 space-y-2'>
-											{(friend.favouriteThings || []).map(
-												(f, idx) => (
-													<li
-														key={idx}
-														className='flex items-center justify-between'
-													>
-														<span className='text-sm'>
-															{f}
-														</span>
-														<button
-															className='text-sm text-red-600 hover:underline'
-															onClick={async () => {
-																const newList =
-																	(
-																		friend.favouriteThings ||
-																		[]
-																	).filter(
-																		(
-																			_,
-																			i
-																		) =>
-																			i !==
-																			idx
-																	)
-																try {
-																	await friendsService.updateFriend(
-																		friend.id,
-																		{
-																			favouriteThings:
-																				newList,
-																		}
-																	)
-																	setFriend({
-																		...friend,
-																		favouriteThings:
-																			newList,
-																	})
-																} catch (err) {
-																	const e =
-																		err as Error
-																	alert(
-																		e.message ||
-																			'Failed to remove favourite'
-																	)
-																}
-															}}
-														>
-															Remove
-														</button>
-													</li>
-												)
-											)}
-										</ul>
-									)}
-
-									<div className='mt-3 flex items-center gap-2'>
-										<input
-											type='text'
-											placeholder='Add a favourite thing'
-											value={newFav}
-											onChange={(e) =>
-												setNewFav(e.target.value)
-											}
-											className='input input-sm flex-1'
-										/>
-										<button
-											className='btn btn-primary'
-											onClick={async () => {
-												if (!newFav.trim()) return
-												const updated = [
-													...(friend.favouriteThings ||
-														[]),
-													newFav.trim(),
-												]
-												try {
-													await friendsService.updateFriend(
-														friend.id,
-														{
-															favouriteThings:
-																updated,
-														}
-													)
-													setFriend({
-														...friend,
-														favouriteThings:
-															updated,
-													})
-													setNewFav('')
-												} catch (err) {
-													const e = err as Error
-													alert(
-														e.message ||
-															'Failed to add favourite'
-													)
-												}
-											}}
-										>
-											Add
-										</button>
-									</div>
-								</div>
-							</div>
+							<Favourites
+								friend={friend}
+								onChange={(f) => setFriend(f)}
+							/>
 						</TabsContent>
 					</Tabs>
 				</CardContent>
