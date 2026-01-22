@@ -32,7 +32,6 @@ export default function ThemeToggle() {
 			</Button>
 
 			<Switch
-				size='sm'
 				checked={current === 'dark'}
 				onCheckedChange={(checked) =>
 					setTheme(checked ? 'dark' : 'light')
