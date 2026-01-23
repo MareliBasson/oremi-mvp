@@ -11,7 +11,7 @@ import EmptyState from './EmptyState'
 import EmptySearch from './EmptySearch'
 
 export default function FriendsList() {
-	const { user, loading: authLoading } = useAuth()
+	const { user, loading: authLoading, settings } = useAuth()
 	const { savedCount } = useFriendModal()
 	const router = useRouter()
 
@@ -25,7 +25,14 @@ export default function FriendsList() {
 		if (!user) return
 		try {
 			setFriendsLoading(true)
-			const data = await friendsService.getFriends(user.uid)
+			// const data = await friendsService.getFriends(user.uid)
+			const sortBy = settings?.sortBy || 'name'
+			const sortOrder = settings?.sortOrder || 'asc'
+			const data = await friendsService.getFriends(
+				user.uid,
+				sortBy,
+				sortOrder
+			)
 			setFriends(data)
 			setDisplayFriends(data)
 		} catch (err) {
@@ -46,8 +53,7 @@ export default function FriendsList() {
 
 		void loadFriends()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, router, authLoading])
-
+	}, [user, router, authLoading, settings])
 	useEffect(() => {
 		// refresh when modal saved
 		void loadFriends()
@@ -106,10 +112,7 @@ export default function FriendsList() {
 						</div>
 
 						<div>
-							<FriendsFilteringControls
-								friends={friends}
-								onSorted={setDisplayFriends}
-							/>
+							<FriendsFilteringControls />
 						</div>
 					</div>
 					{displayFriends.length === 0 ? (

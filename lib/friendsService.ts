@@ -17,15 +17,29 @@ import { Friend, FriendInput } from '@/types/friend'
 const FRIENDS_COLLECTION = 'friends'
 
 export const friendsService = {
-	async getFriends(userId: string): Promise<Friend[]> {
+	async getFriends(
+		userId: string,
+		sortBy: 'name' | 'createdAt' = 'name',
+		sortOrder: 'asc' | 'desc' = 'asc'
+	): Promise<Friend[]> {
 		if (!db) throw new Error('Firebase not initialized')
 
-		const q = query(
-			collection(db, FRIENDS_COLLECTION),
-			where('userId', '==', userId),
-			orderBy('firstName', 'asc'),
-			orderBy('lastName', 'asc')
-		)
+		let q
+		if (sortBy === 'createdAt') {
+			q = query(
+				collection(db, FRIENDS_COLLECTION),
+				where('userId', '==', userId),
+				orderBy('createdAt', sortOrder)
+			)
+		} else {
+			// sort by name: firstName then lastName
+			q = query(
+				collection(db, FRIENDS_COLLECTION),
+				where('userId', '==', userId),
+				orderBy('firstName', sortOrder),
+				orderBy('lastName', sortOrder)
+			)
+		}
 
 		const querySnapshot = await getDocs(q)
 		const friends: Friend[] = []

@@ -1,8 +1,6 @@
 'use client'
 
 import React from 'react'
-import { Friend } from '@/types/friend'
-import SortControls from './SortControls'
 import {
 	Dialog,
 	DialogTrigger,
@@ -12,14 +10,8 @@ import {
 	DialogDescription,
 } from '@/components/ui/dialog'
 import { Filter } from 'lucide-react'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 
-type Props = {
-	friends: Friend[]
-	onSorted: (friends: Friend[]) => void
-}
-
-export default function FriendsFilteringControls({ friends, onSorted }: Props) {
+export default function FriendsFilteringControls() {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -37,37 +29,15 @@ export default function FriendsFilteringControls({ friends, onSorted }: Props) {
 				<DialogHeader>
 					<DialogTitle>Filters & Sort</DialogTitle>
 					<DialogDescription>
-						Choose how to sort and filter your friends list.
+						Filters and sorting are temporarily disabled. We'll
+						re-enable these controls later.
 					</DialogDescription>
 				</DialogHeader>
 
-				<div className='min-h-[400px] mt-4 '>
-					<Tabs defaultValue='sort'>
-						<TabsList className='mb-4 w-full'>
-							<TabsTrigger value='sort'>Sort</TabsTrigger>
-							<TabsTrigger value='status'>Status</TabsTrigger>
-							<TabsTrigger value='tags'>Tags</TabsTrigger>
-						</TabsList>
-
-						<TabsContent value='sort'>
-							<SortControls
-								friends={friends}
-								onSorted={onSorted}
-							/>
-						</TabsContent>
-
-						<TabsContent value='status'>
-							<div className='text-sm text-muted-foreground'>
-								Status filters will go here.
-							</div>
-						</TabsContent>
-
-						<TabsContent value='tags'>
-							<div className='text-sm text-muted-foreground'>
-								Tag filters will go here.
-							</div>
-						</TabsContent>
-					</Tabs>
+				<div className='min-h-[200px] mt-4 flex items-center justify-center'>
+					<div className='text-sm text-muted-foreground'>
+						Coming soon
+					</div>
 				</div>
 			</DialogContent>
 		</Dialog>
